@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "feature": "openai-voice-maintenance",
+  "launchMode": "android-speech-fallback-plus-responses-tools",
+  "responsesApi": {
+    "enabledWhenCredentialConfigured": true,
+    "endpoint": "https://api.openai.com/v1/responses",
+    "localFunctionTools": true,
+    "credentialsInPrompt": false
+  },
+  "realtime": {
+    "architectureReady": true,
+    "preferredMobileTransport": "WebRTC",
+    "preferredModel": "gpt-realtime-2.1",
+    "credentialPolicy": "ephemeral-token-from-secure-session-broker",
+    "fallbackUntilBrokerConfigured": "Android SpeechRecognizer -> Responses API -> Android TTS",
+    "note": "OpenAI recommends WebRTC for browser/mobile Realtime clients. Standard API keys are not embedded into Realtime prompts or client session configuration."
+  },
+  "maintenance": {
+    "toolHost": "directMaintenanceHostV1",
+    "guardianRequiredForWrites": true,
+    "remoteShell": false,
+    "arbitraryFileAccess": false,
+    "signedRemoteUpdatePackagesOnly": true
+  }
+}

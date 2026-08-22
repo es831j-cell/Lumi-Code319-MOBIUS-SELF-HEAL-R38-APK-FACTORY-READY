@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "policyId": "silent-unattended-v1",
+  "screenWake": "FORBIDDEN",
+  "audio": "FORBIDDEN",
+  "vibration": "FORBIDDEN",
+  "spokenStatus": "FORBIDDEN",
+  "headsUp": "FORBIDDEN",
+  "fullScreenUi": "FORBIDDEN",
+  "foregroundNotification": "LOWEST_PLATFORM_ALLOWED_SILENT",
+  "approvalHandling": "STAGE_AND_WAIT",
+  "successReportingDestination": "REMOTE_REQUEST_ORIGIN",
+  "failureReportingDestination": "REMOTE_REQUEST_ORIGIN_AND_LOCAL_LEDGER"
+}

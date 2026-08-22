@@ -1,0 +1,20 @@
+LUMI CODE262 — UNIFIED AI ROUTER REPAIR
+Date: 2026-08-21
+Version: 4.0.15-unified-ai-router-r1
+VersionCode: 262
+
+Problem proved on-device:
+- Integration Center could show CONNECTED • openai while Talk still fell back locally and reported that no stronger online AI route was available.
+
+Repair:
+1. One routing hierarchy in Talk: light/social turns -> local Fast Brain; substantive/deep work -> unified strong route.
+2. Unified strong route preference: OpenAI first when its secure credential/configuration exists; optional remote open-model booster second; local fallback remains available.
+3. requestLocalReply no longer checks only the legacy remote booster before escalating deep work.
+4. OpenAI request failures are recorded separately from provider configuration, so a failed inference can no longer be described as “no provider configured.”
+5. Successful OpenAI inference clears the last request error and records a success timestamp.
+6. GitHub workflow version checks were stale at Code260; they now verify Code262 / 4.0.15-unified-ai-router-r1.
+
+Security / behavior preserved:
+- API keys remain in SecretStore and are never written into diagnostics or prompts.
+- Local-first/offline continuity remains intact.
+- Mutating maintenance tools still require the existing authorization layer and Guardian/update checks.

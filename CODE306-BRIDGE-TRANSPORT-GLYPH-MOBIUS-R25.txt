@@ -1,0 +1,9 @@
+Lumi Code 306 / R25
+
+Changes:
+- Guardian->Lumi bridge provider now performs explicit caller package + signing-certificate verification inside Lumi instead of relying on the opaque manifest permission gate.
+- Keeps Guardian control surface protected; only com.distressedelk.lumi.guardian signed with the trusted certificate is accepted.
+- Real 3D Möbius scaled down and reframed to better match the reference-photo proportions.
+- Adds procedural luminous glyph markings integrated into the rendered Möbius surface.
+- Adds hard SpeechRecognizer reset after four consecutive silent code-7 sessions, preventing endless READY/deaf restart loops.
+- Preserves Guardian 1.9 code 10 and all Code 305 ping/echo diagnostics.

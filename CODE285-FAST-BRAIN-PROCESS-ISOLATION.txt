@@ -1,0 +1,19 @@
+LUMI CODE 285 - FAST BRAIN PROCESS ISOLATION + FOREGROUND SURVIVAL
+
+Purpose
+- Keep Lumi visibly open when native Fast Brain inference fails.
+- Prevent local AI native faults from taking down MainActivity/conversation UI.
+
+Changes
+1. Native llama inference moved behind FastBrainProcessService running in android:process=":fastbrain".
+2. LocalBrain is now a main-process proxy using ResultReceiver IPC.
+3. Fast Brain worker timeout/failure returns an error to the conversation router instead of killing Lumi.
+4. Runtime recovery no longer schedules AlarmManager relaunch + Process.killProcess().
+5. Stalled local inference is quarantined while the foreground Activity stays alive and listening resumes.
+6. Certification initializes the proxy and exercises the same isolated worker boundary.
+7. Version bumped to 4.0.38-fast-brain-isolation-r4 / code 285.
+
+Expected behavior
+- A native inference crash may terminate :fastbrain, but Lumi's UI remains open.
+- The request times out/fails safely, Fast Brain is quarantined, and Lumi routes around it.
+- No deliberate main-process kill occurs during runtime recovery.

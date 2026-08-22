@@ -1,0 +1,11 @@
+STOP BEFORE UNINSTALLING THE CURRENT LUMI
+
+Android normally deletes an app's private storage during uninstall.
+
+Before removing the current Lumi:
+1. Export any Lumi portable backup the current build offers under Backup & Recovery.
+2. Export/save diagnostics if you want the technical history retained separately.
+3. Keep the known-good current Lumi APK/source recovery package until Lumi 1.0 passes Guardian certification.
+4. Do not delete APK Factory after launch; retain it as catastrophic fallback.
+
+Lumi 1.0 can restore older portable LumiBackup data. If an older backup has no Memory Vault object, Lumi 1.0 imports the legacy stored memory/transcript fields into the new vault.

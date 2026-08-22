@@ -1,0 +1,16 @@
+LUMI CODE263 — HOME PROVIDER STATE REPAIR
+
+VersionCode: 263
+VersionName: 4.0.16-home-provider-state-r1
+
+Root cause confirmed:
+- Integration Center was reading the live Connection Manager and correctly showing OpenAI CONNECTED.
+- Home renders the persisted SharedPreferences value `last_lumi_reply`.
+- Android preserves that preference across APK upgrades, so the exact legacy sentence from an older build could remain visible even though the current Code262 source no longer contained that sentence.
+
+Repair:
+1. Home normalizes its persisted subtitle before display.
+2. If the saved reply claims no provider is configured but the secure OpenAI credential exists, the stale reply is invalidated.
+3. If Connection Manager is CONNECTED/openai, Home immediately reports that OpenAI is connected and local-first hybrid routing is active.
+4. If OpenAI is configured but the boot health check is still pending, Home reports that it is starting locally while verifying the online route, rather than falsely saying no provider exists.
+5. CI/core-update artifact naming and version gates are advanced to Code263.

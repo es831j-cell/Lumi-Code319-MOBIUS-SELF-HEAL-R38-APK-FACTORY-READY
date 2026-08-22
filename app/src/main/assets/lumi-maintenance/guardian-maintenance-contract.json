@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "guardianIsIndependentGate": true,
+  "rules": [
+    "No remote command may clear quarantine by assertion.",
+    "Install requests require a verified package and a recovery checkpoint.",
+    "Post-update certification must use real subsystem checks.",
+    "Failed certification triggers automatic rollback when possible.",
+    "Guardian cannot be bypassed by relay or connector authority.",
+    "Remote maintenance permissions are revocable and default-deny."
+  ],
+  "requiredResultFields": [
+    "verification", "checkpoint", "install", "certification", "rollback", "diagnosticLog"
+  ]
+}

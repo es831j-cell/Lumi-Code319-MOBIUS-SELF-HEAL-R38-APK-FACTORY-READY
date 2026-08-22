@@ -1,0 +1,16 @@
+LUMI CODE 304 — REAL-TIME 3D MÖBIUS R23
+
+Scope
+- Replaces the development Möbius bitmap on Lumi's home screen with a parametrically generated 3D Möbius mesh.
+- Uses Android OpenGL ES 2.0 directly; no new third-party graphics dependency is required.
+- Retains Code 303 Guardian bridge and home voice-control repairs.
+
+3D behavior
+- True mesh geometry with depth, perspective, normals, depth testing, directional lighting, specular highlights, and rim light.
+- The actual 3D object rotates in space; no bitmap rotation is used.
+- Vertex displacement animates the physical mesh surface.
+- Lumi state drives the mesh: paused, ready, listening, thinking, and speaking each use distinct motion/wave intensity.
+- Diagnostics now report: real-time 3D mesh, GPU rendered, state animation enabled, bitmap false.
+
+Recovery
+- The previous lumi_dev_mobius.png asset remains in the source tree as a fallback/recovery asset but is not used for the home development core while developer_avatar_mobius=true.

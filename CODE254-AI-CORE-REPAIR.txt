@@ -1,0 +1,15 @@
+LUMI CODE254 AI CORE REPAIR
+
+Repairs:
+- Permanently removes the retired 192.168.1.100:11434 prototype endpoint on startup.
+- Prompts once after upgrade to finish secure OpenAI setup if no credential exists.
+- AI-status questions immediately distinguish "credential missing" from "checking connection".
+- Keeps API keys exclusively in Android Keystore-backed SecretStore.
+- OpenAI-connected substantive conversation uses the existing Responses API reasoning client.
+- Removes duplicated LOCAL_ONLY status wording.
+- Adds an explicit "Forget saved OpenAI key" control.
+- Keeps local Fast Brain as offline fallback.
+- Manual GitHub fallback workflow builds a signed Code254 APK and packages
+  Lumi-Code254-AI-Core-Repair-INAPP.zip for Lumi/Guardian installation.
+
+No API key is embedded in this package.

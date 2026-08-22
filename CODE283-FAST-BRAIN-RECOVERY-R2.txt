@@ -1,0 +1,15 @@
+LUMI CODE 283 — FAST BRAIN RECOVERY R2
+
+Purpose
+Fix the Code282 startup recovery path that could leave Fast Brain quarantined after a healthy engine produced an unusable one-shot health-probe completion.
+
+Changes
+1. Recovery probe now uses a stronger certification-style system prompt.
+2. First recovery attempt receives a 96-token budget.
+3. If the first visible completion does not normalize to exactly READY, one controlled 128-token retry runs.
+4. Quarantine clears only when the final visible token normalizes to exactly READY.
+5. Native load/inference exceptions still preserve quarantine.
+6. Diagnostics now record a safe preview when the strict token gate is not met.
+
+Expected device result
+After install and restart, a healthy Fast Brain should leave quarantine during isolated startup recovery, warm normally, and resume local routing. If both strict probes fail or native inference throws, quarantine remains active for safety.

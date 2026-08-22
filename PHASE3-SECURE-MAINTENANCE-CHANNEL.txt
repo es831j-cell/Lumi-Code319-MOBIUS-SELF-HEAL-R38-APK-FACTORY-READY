@@ -1,0 +1,21 @@
+LUMI PHASE 3 — SECURE MAINTENANCE REQUEST CHANNEL
+
+VersionCode: 276
+VersionName: 4.0.29-phase3-secure-maintenance-r1
+Guardian: 1.4-maintenance-channel (code 5)
+
+PURPOSE
+Phase 3 gives Lumi a bounded, signature-protected request path into Guardian. A conversational maintenance request can now be converted into a structured request envelope, owner-authorized, integrity hashed, freshness checked, replay checked, and queued in Guardian's private storage.
+
+SECURITY BOUNDARY
+- Android signature permission authenticates Lumi to Guardian.
+- Requests are allow-listed by change type.
+- Request text is bounded to 500 characters.
+- 2-minute freshness window.
+- Nonce replay protection.
+- SHA-256 envelope integrity check.
+- Queue submission does NOT provide shell access, arbitrary file read/write, permission escalation, or automatic installation.
+- Existing Guardian checkpoint, verification, install, certification, and rollback boundaries remain intact.
+
+CONVERSATION RE-ARM INCLUDED
+This build also includes the requested Fast Conversational Re-arm tuning. Reply TTS guard is reduced from 1050 ms to 220 ms and cue guard from 700 ms to 140 ms. Recognition is scheduled roughly 25 ms after the guard, with a 60 ms minimum scheduling delay. Existing 4.2-second speech fingerprint echo rejection remains active so fast re-arm does not simply turn Lumi's own TTS tail into a user turn.

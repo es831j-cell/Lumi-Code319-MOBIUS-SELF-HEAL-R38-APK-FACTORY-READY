@@ -1,0 +1,22 @@
+LUMI CODE 295 — POST-TTS LISTENING RECOVERY + WAKE CUE SUPPRESSION R14
+
+Built from Code 294.
+
+Fixes:
+- Detects the READY-but-deaf SpeechRecognizer pattern after Lumi finishes TTS.
+- After two post-TTS silent sessions with no actual AUDIO_DETECTED callback, destroys
+  and recreates the recognizer instead of looping the stale client.
+- Prefers Android's on-device SpeechRecognizer on supported Android 12+ devices.
+- Marks all automatic recognizer restarts as silent recovery restarts.
+- Prevents Lumi's own wake/listen cue logic from being associated with automatic STT recovery.
+- Slows silence retries enough to prevent rapid wake/beep loops.
+- Makes the persistent Lumi foreground-service notification explicitly silent and only-alert-once.
+
+Retained:
+- Code 294 TTS watchdog and one-time spoken retry
+- direct Android time
+- dedicated weather route
+- Fast Brain foreground isolation
+- responsive OpenAI path
+- speaker confidence check
+- Listen / Stop listening controls

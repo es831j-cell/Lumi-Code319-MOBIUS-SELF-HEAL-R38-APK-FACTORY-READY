@@ -1,0 +1,14 @@
+LUMI CODE 273 — LIVE STATE + CONVERSATIONAL CONTINUITY REPAIR
+
+Fixes:
+- “How are you?” is social conversation again, not a diagnostic trigger.
+- “Run a self diagnostics / self diagnostic” variants invoke the real core self-test path.
+- Follow-ups such as “those are already connected” resolve against the prior AI/provider context.
+- Generic local fallback no longer claims cloud credentials are missing when OpenAI is already configured.
+- Memory seed updated so local-model behavior matches these routing rules.
+
+Validation prompts:
+1. How are you?
+2. Can you run a self diagnostics?
+3. Those are already connected.  (after any provider/credential statement)
+4. How is your AI?

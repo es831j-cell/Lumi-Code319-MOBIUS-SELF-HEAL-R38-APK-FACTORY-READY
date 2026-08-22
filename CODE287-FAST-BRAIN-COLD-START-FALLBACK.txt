@@ -1,0 +1,9 @@
+LUMI CODE 287 - FAST BRAIN COLD START + STRONG FALLBACK
+
+1. Keeps Code285 process isolation so Fast Brain native failures cannot take down Lumi's foreground UI.
+2. Keeps Code286 speech-only audio focus behavior.
+3. Extends isolated Fast Brain cold-start/probe timeout from 18 seconds to 65 seconds.
+4. Uses the long timeout whenever the worker is not already warm; warm requests remain fast once loaded.
+5. When Fast Brain is quarantined, ordinary generative conversation automatically uses the strongest configured safe brain instead of the generic local fallback.
+6. Live tools still match before model routing, so weather/current-data requests keep their dedicated tool path.
+7. Version bumped to 4.0.40-fast-brain-cold-start-fallback-r6 / code 287.

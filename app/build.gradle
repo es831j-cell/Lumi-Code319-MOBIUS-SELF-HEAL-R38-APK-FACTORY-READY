@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21'
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = file('keystore.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace 'com.distressedelk.lumi'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.distressedelk.lumi'
+        minSdk 28
+        targetSdk 35
+        versionCode 319
+        versionName '4.0.72-mobius-self-heal-r38'
+        ndk { abiFilters 'arm64-v8a' }
+    }
+
+    signingConfigs {
+        lumiPrototype {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
+    buildTypes {
+        debug { signingConfig signingConfigs.lumiPrototype }
+        release {
+            signingConfig signingConfigs.lumiPrototype
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = '17' }
+
+}
+
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+    implementation 'dev.ffmpegkit-maintained:llama-android:0.1.1'
+}
+
+
+// Lumi 1.0 launch hardening: APK Factory invokes `gradle assembleDebug` from its
+// own dedicated workflow. Do not rely on an external workflow step to replace
+// the placeholder Guardian resource. Every app variant embeds a freshly built,
+// signed Guardian APK before Android resource processing starts.
+def registerGuardianEmbedTask = { String cap, String lower ->
+    def taskName = "embedGuardian${cap}"
+    tasks.register(taskName) {
+        dependsOn ":guardian:assemble${cap}"
+        outputs.upToDateWhen { false }
+        doLast {
+            def dir = file("../guardian/build/outputs/apk/${lower}")
+            def candidates = fileTree(dir).matching { include '*.apk' }.files.findAll { it.isFile() }
+            if (candidates.size() != 1) {
+                throw new GradleException("Expected exactly one Guardian ${lower} APK, found ${candidates.size()} in ${dir}")
+            }
+            def sourceApk = candidates.iterator().next()
+            if (sourceApk.length() <= 4096L) {
+                throw new GradleException("Guardian ${lower} APK is too small to be valid: ${sourceApk.length()} bytes")
+            }
+            byte[] magic = new byte[4]
+            sourceApk.withInputStream { input ->
+                if (input.read(magic) != 4 || magic[0] != (byte)0x50 || magic[1] != (byte)0x4B) {
+                    throw new GradleException("Guardian ${lower} output is not a ZIP/APK file")
+                }
+            }
+            def target = file('src/main/res/raw/lumi_guardian.apk')
+            target.parentFile.mkdirs()
+            target.bytes = sourceApk.bytes
+            if (target.length() != sourceApk.length()) {
+                throw new GradleException("Guardian embed copy was truncated")
+            }
+            println "Embedded Guardian ${lower}: ${sourceApk} -> ${target} (${target.length()} bytes)"
+        }
+    }
+    afterEvaluate {
+        tasks.named("pre${cap}Build").configure { dependsOn tasks.named(taskName) }
+    }
+}
+
+registerGuardianEmbedTask('Debug', 'debug')
+registerGuardianEmbedTask('Release', 'release')

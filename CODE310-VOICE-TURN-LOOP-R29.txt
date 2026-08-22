@@ -1,0 +1,22 @@
+LUMI CODE 310 — VOICE TURN LOOP R29
+
+Purpose
+- Repair the listening/talking handoff without changing the connected Guardian bridge or 3D Möbius renderer.
+
+Changes
+- Increase the post-TTS echo/drain guard from 95 ms to 240 ms. This is still conversationally fast but gives Samsung/Google audio output time to leave the microphone path.
+- Add explicit STT HANDOFF_SCHEDULED -> READY timing diagnostics.
+- Make on-device recognizer failover sticky. System audio-detected/code-7 switches immediately to on-device; on-device remains selected unless it produces two genuine audio-detected/no-match failures.
+- Any usable final or salvaged transcript resets the on-device miss streak.
+- Reduce recognizer recovery restart delay from 650 ms to 420 ms and post-TTS deaf rebuild delay from 700 ms to 480 ms.
+- Preserve Guardian 2.1 / code 12 and BRIDGE_CONNECTED infrastructure unchanged.
+- Preserve Code 309 welded neon-glass Möbius and alien-rune renderer unchanged.
+
+Expected behavior
+- Lumi finishes speaking, releases audio focus, waits ~240 ms for output drain, then creates a fresh recognizer session.
+- The diagnostic trace reports handoff latency from schedule to READY.
+- A single code-7 after real audio no longer causes engine ping-pong.
+
+Version
+- Lumi 4.0.63-voice-turn-loop-r29
+- versionCode 310

@@ -1,0 +1,26 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21'
+    }
+}
+
+
+// APK Factory 2.6.1 calls `gradle assembleDebug`. Provide an exact root task
+// that produces Lumi (whose preDebugBuild embeds Guardian) and leaves only the
+// primary Lumi APK under **/build/outputs/apk for artifact collection.
+tasks.register('cleanupGuardianDebugArtifact', Delete) {
+    delete fileTree("${rootDir}/guardian/build/outputs/apk/debug") { include '*.apk' }
+}
+
+tasks.register('assembleDebug') {
+    group = 'build'
+    description = 'Build Lumi debug APK with embedded Guardian for APK Factory.'
+    dependsOn ':app:assembleDebug'
+    finalizedBy 'cleanupGuardianDebugArtifact'
+}

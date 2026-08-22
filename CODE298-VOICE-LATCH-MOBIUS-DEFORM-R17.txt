@@ -1,0 +1,16 @@
+LUMI CODE 298 — HARD VOICE LATCH + TRUE MÖBIUS DEFORMATION + STATUS R17
+
+Changes:
+- Stop Listening is enforced inside startContinuousListening itself, making the manual
+  stop latch the final gate even if another subsystem attempts a restart.
+- Stop increments the listening generation so already-scheduled restart callbacks become stale.
+- Recognizer rebuild paths respect the manual-stop latch.
+- Main screen now displays a persistent microphone state:
+  PAUSED / READY / LISTENING / THINKING / SPEAKING.
+- Replaces whole-picture tilt/rotation with bitmap-mesh deformation of the actual Möbius image.
+  The ribbon region flexes and flows while the rest of the screen remains visually stable.
+- Existing lighting overlay remains secondary; geometry deformation is now the primary motion.
+
+Voice recognition stability:
+- Preserves on-device recognizer preference and Code 295 post-TTS recovery.
+- Manual stop can no longer be undone by automatic speech recovery.

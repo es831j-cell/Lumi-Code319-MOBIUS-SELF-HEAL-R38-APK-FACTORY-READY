@@ -1,0 +1,24 @@
+LUMI CODE 318 — EVOLUTION ENGINE R37
+
+PURPOSE
+Move Lumi from reactive error repair toward bounded continuous self-optimization.
+
+IMPLEMENTED
+- Manual Optimize Now button in Self-Improvement & Device Health.
+- Targeted manual optimization for speech, animation, conversation, battery, or updates.
+- Voice commands: optimize now / optimize yourself / optimize <subsystem>.
+- Overnight optimization automatically arms when enabled.
+- Heavy overnight cycles run only while the phone is plugged in AND battery reports 100%.
+- Unplugging or falling outside the full-charge gate stops the overnight loop.
+- 15-minute bounded reevaluation cycles rather than continuous CPU burn.
+- Each cycle selects the current limiting subsystem from available telemetry.
+- Low-risk reversible runtime tuning may be applied automatically.
+- Core/code/security changes remain staged and Guardian-gated.
+- Persistent cycle count, last focus, last report, and overnight report log.
+- Möbius renderer now exports FPS/frame-count telemetry into the optimization data plane.
+
+SAFETY / HONESTY BOUNDARY
+This engine does not pretend the APK can invent, compile, sign, and install arbitrary Java source by itself. It can continuously benchmark and tune approved runtime controls, prioritize bottlenecks, and feed core-change candidates into the existing verified Guardian update path. Major/core changes still require the protected update workflow.
+
+OVERNIGHT MODEL
+The user's practical "morning" boundary is unplugging the phone. While charging at 100%, Lumi reevaluates every 15 minutes. Unplugging ends the loop automatically.

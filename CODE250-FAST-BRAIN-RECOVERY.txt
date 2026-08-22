@@ -1,0 +1,16 @@
+LUMI CODE250 FAST BRAIN RECOVERY
+
+Problem confirmed by Code249 diagnostics:
+- Fast Brain model file verified but model not loaded.
+- A local inference was active when the process restarted.
+- Startup correctly quarantined Fast Brain, but did not attempt safe recovery.
+
+Code250:
+- Runs one isolated startup recovery probe while quarantined.
+- Clears quarantine only after a successful constrained inference.
+- Warms the normal Fast Brain worker only after that probe passes.
+- Persists an in-flight recovery marker before native inference.
+- If the process restarts during the probe, automatic re-probing is suppressed for six hours,
+  preventing a crash loop.
+- While quarantined, Lumi refreshes and prefers her stronger online AI route when configured.
+- Adds recovery success/failure diagnostics.

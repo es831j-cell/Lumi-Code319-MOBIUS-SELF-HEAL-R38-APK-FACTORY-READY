@@ -1,0 +1,8 @@
+LUMI CODE 247 - FAST BRAIN CERTIFICATION DIAGNOSTIC FIX
+
+- Certification now requests /no_think and allows up to 96 output tokens so Qwen3 cannot consume the entire probe inside hidden reasoning.
+- LocalBrain exposes an internal raw-completion certification path while normal conversation still receives sanitized visible replies.
+- Certification records both raw and visible probe previews.
+- Empty raw output, thinking/control-only output, engine errors, timeouts, and genuinely unexpected visible replies are reported distinctly.
+- Quarantine still clears ONLY when the sanitized visible answer is exactly LUMI_READY.
+- Guardian remains 1.1-certification / code 2 because its IPC/UI contract does not need to change for this repair.

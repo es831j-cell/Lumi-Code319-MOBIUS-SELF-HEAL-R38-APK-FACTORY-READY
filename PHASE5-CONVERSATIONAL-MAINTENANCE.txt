@@ -1,0 +1,25 @@
+LUMI PHASE 5 — CONVERSATIONAL MAINTENANCE ORCHESTRATION
+Version: Lumi 4.0.31 / code 278 • Guardian 1.6 / code 7
+
+PURPOSE
+Phase 5 makes normal Lumi conversation the front door for the guarded maintenance system built in Phases 1-4.
+
+IMPLEMENTED IN SOURCE
+• Explicit requests such as “Lumi, fix your continuous listening,” “update your routing,” or “repair your voice loop” are recognized as maintenance intent before ordinary local chat routing.
+• Maintenance intent is routed to the configured OpenAI reasoning path with Lumi's bounded local maintenance tools.
+• The reasoning path can read current Lumi/Guardian health, bounded redacted diagnostics, and recent technical-ledger history before deciding what to request.
+• Mutating actions still require MaintenanceAuthorization: enrolled administrator, unlocked phone, and a current explicit approval phrase.
+• Guardian remains authoritative for request freshness, replay protection, integrity, package/signature verification, checkpointing, install submission, and post-change certification.
+• Follow-up approvals such as “fix it” or “do it” inherit maintenance intent only when Lumi's immediately preceding reply was actually about maintenance/update work.
+• OpenAI instructions explicitly distinguish QUEUED from APPLIED/CERTIFIED so Lumi cannot claim a request was fixed merely because Guardian accepted it into the queue.
+
+WHAT PHASE 5 DOES NOT CLAIM
+Phase 5 does not magically create a signed Android package on the phone. A request can now move naturally from conversation into Guardian's trusted queue, but an external signed build/package source is still required for compiled core changes. Content/runtime modules can use the existing signed module/update path. The final APK-Factory escape requires the trusted build/package relay phase.
+
+ACCEPTANCE TEST
+1. Install Lumi 278 and Guardian 1.6.
+2. Ask: “Lumi, diagnose why your conversation feels choppy.” Confirm Lumi reads diagnostics/status rather than guessing.
+3. Ask: “Lumi, fix your conversation re-arm. Do it.” Confirm a bounded Guardian maintenance request is queued and Lumi says QUEUED, not CERTIFIED.
+4. Open Guardian and verify the pending request text/type/id are visible and signed/replay protections remain active.
+5. Feed the request a harmless signed runtime/content package through the existing update path and verify Phase 4 certification changes the transaction to CERTIFIED.
+6. Keep APK Factory installed as catastrophic backup until the later trusted build/package relay is proven on-device.

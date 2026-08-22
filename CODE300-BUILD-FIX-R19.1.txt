@@ -1,0 +1,10 @@
+LUMI CODE 300 BUILD FIX R19.1
+
+Corrects the failed Code 300 rollback build:
+- Removed stale MobiusMotionView creation left in showHome().
+- Removed invalid ImageView.setLumiState(...) call that caused Java compilation failure.
+- Removed animation helper source classes from the package.
+- Home visual is now the original static ImageView only.
+
+All Code 299 speech-recognition improvements, hard Stop Listening latch, and status
+indicator remain unchanged.

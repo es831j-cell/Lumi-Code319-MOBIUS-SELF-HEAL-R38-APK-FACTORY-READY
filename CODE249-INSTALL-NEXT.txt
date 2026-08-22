@@ -1,0 +1,15 @@
+LUMI CODE249 AI INIT FIX — NEXT INSTALL
+
+1. Build this ZIP with APK Factory.
+2. Download the completed GitHub artifact.
+3. Import ONLY:
+   Lumi-Code249-AI-Init-Fix-INAPP.zip
+   into Lumi Update Center.
+4. Lumi should verify the embedded Code249 APK, then Android will open
+   the normal app-update confirmation because this is a compiled core update.
+
+Expected result after installation:
+- Core version becomes 4.0.2-ai-init-fix-r1 / code 249.
+- “How’s your AI?” is handled as AI connection health.
+- AI state is freshly checked instead of using the generic booster fallback.
+- Integration Center exposes “Recheck AI connection now”.

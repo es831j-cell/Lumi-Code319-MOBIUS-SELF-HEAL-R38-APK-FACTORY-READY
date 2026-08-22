@@ -1,0 +1,9 @@
+LUMI CODE 308 — SPEECH + BRIDGE TELEMETRY R27
+
+- App 4.0.61 / code 308.
+- Guardian minimum corrected to code 11 everywhere.
+- Adds explicit Guardian / Maintenance Bridge section to development diagnostics.
+- Bridge diagnostics report Guardian version, reachability, transport ping, transaction echo, Lumi identity/auth, maintenance host readiness, state, failed stage, and round-trip latency.
+- Speech recognizer now immediately switches recognition engines after beginning-of-speech followed by Android code 7 / no-match, instead of sacrificing a second spoken phrase before recovery.
+- System/network recognizer remains primary; on-device recognition is an adaptive recovery path when supported.
+- Code 307 compact 3D Möbius visual is unchanged.

@@ -1,0 +1,33 @@
+LUMI CODE 271 — CONTEXT, ATTENTION & CONVERSATION UX
+
+Purpose
+- Stop idle background conversation from becoming user turns.
+- Make keyboard mode behave like a real keyboard conversation.
+- Greet naturally on launch instead of surfacing stale technical status.
+- Add named Trusted Places and lightweight routine memory.
+
+Changes
+1. Attention gate for continuous speech
+   - Direct address ("Lumi", "Hey Lumi") opens a conversational attention window.
+   - Follow-up speech inside the window remains natural and hands-free.
+   - Speech heard outside the attention window is logged as ambient diagnostics and is not promoted into the transcript or routed as a user request.
+   - Keyboard mode blocks continuous microphone turns completely.
+
+2. Keyboard conversation mode
+   - Focusing the Talk composer pauses hands-free recognition.
+   - Send clears the message but immediately returns focus to the composer and keeps the keyboard ready.
+   - Voice controls explicitly release keyboard ownership and resume voice interaction.
+
+3. Conversational launch
+   - Fresh app launch shows a time-appropriate greeting.
+   - Provider checks and diagnostics stay background-only unless asked for.
+
+4. Trusted Places & Routines
+   - New Lumi Systems screen for Trusted Places & Routines.
+   - Save the current location with a human name and optional owner, e.g. Home, Work, Workshop, Mom's house.
+   - Recognize saved places within a configurable-radius foundation (250 m default).
+   - Record last-seen time and lightweight visit counts for routine learning.
+   - Location labels are contextual hints, not proof of why the user is somewhere.
+
+Privacy/identity note
+Code 271 does not claim biometric speaker identification. Ambient speech is kept out of the active transcript unless Lumi is engaged. Persistent attachment of overheard statements to a specific person requires a separate enrolled-speaker identity layer.

@@ -1,0 +1,16 @@
+LUMI CODE 291 — VOICE + ONLINE ROUTING R10
+
+VersionCode: 291
+VersionName: 4.0.44-voice-online-routing-r10
+
+Changes
+- Main-screen Listen explicitly exits keyboard/wake-only mode and owns voice input.
+- While Listen/conversation mode is active, recognized speech is promoted to a user turn instead of being mislabeled ambient speech.
+- Weather with no spoken city uses the phone's available last-known location and routes directly to the dedicated weather provider.
+- Dedicated live providers retry once on transient failure.
+- If all dedicated providers fail, Lumi makes one online reasoning fallback before returning a failure.
+- Online route/status/provider results are recorded in diagnostics preferences.
+- Fast Brain remains excluded from foreground conversation.
+
+Goal
+Fast, direct online retrieval for weather/news/market/current-data requests while preserving stable voice conversation.

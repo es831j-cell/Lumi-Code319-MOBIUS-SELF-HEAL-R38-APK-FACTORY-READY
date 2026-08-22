@@ -1,0 +1,37 @@
+LUMI CODE 315 — CORE VOICE STABILITY R34
+
+Milestone: Core Stability / Voice Conversation Reliability
+
+This is a subsystem stability release, not a single-error patch.
+
+Changes:
+1. Atomic STT -> TTS handoff.
+   - SpeechRecognizer is cancelled and destroyed before every reply.
+   - Adds a 180 ms microphone-to-TTS release barrier before TTS submission.
+   - Older queued speech submissions are invalidated by generation ID.
+
+2. Full-strength speech focus.
+   - Changes TTS focus from AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK to
+     AUDIOFOCUS_GAIN_TRANSIENT so Lumi does not request a ducking-style focus mode.
+
+3. Hard listener exclusion while Lumi is talking.
+   - startContinuousListening now blocks while TTS is submitted, started, active,
+     or inside the echo-suppression window.
+   - Adds structured BLOCKED_DURING_TTS diagnostics.
+
+4. Stronger TTS self-heal.
+   - Allows two engine rebuild/retry cycles before abandoning a spoken reply.
+   - Preserves text display and restores listening even if speech ultimately fails.
+   - Logs retry count and failure reason.
+
+5. Better handoff telemetry.
+   - Adds MIC_RELEASED and MIC_RELEASE_BARRIER trace stages.
+   - Diagnostic logs now make it possible to prove whether microphone capture
+     overlapped the start of a spoken response.
+
+Acceptance target on phone:
+- First, second, and later replies remain at consistent audible volume.
+- No recognizer session is active while TTS is speaking.
+- 30-minute conversation test does not fall into permanent text-only mode.
+- If Google TTS wedges, Lumi rebuilds it and retries without user intervention.
+- Stop Listening remains a hard latch until the user explicitly restarts listening.

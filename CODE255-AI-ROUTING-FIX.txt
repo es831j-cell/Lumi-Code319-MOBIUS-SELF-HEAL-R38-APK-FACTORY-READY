@@ -1,0 +1,12 @@
+LUMI CODE255 AI ROUTING FIX
+
+- Removes the remaining stale retired-prototype status path.
+- AI status questions report the live OpenAI state directly.
+- Configured OpenAI takes precedence over legacy remote-provider routing.
+- Local Fast Brain remains the offline fallback.
+- Guardian / Factory Exit architecture is unchanged.
+
+Expected:
+• Connected: “My stronger AI connection is online through OpenAI.”
+• Configured/checking: reports secure credential and active check.
+• Not configured: directs to Integration Center without mentioning the retired prototype endpoint.

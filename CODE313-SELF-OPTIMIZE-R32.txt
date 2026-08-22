@@ -1,0 +1,19 @@
+LUMI CODE 313 — SELF OPTIMIZE R32
+
+New phrases:
+- "optimize yourself"
+  Runs Lumi's local self-analysis, checks core self-test state, Guardian trust,
+  and whether a verified core update is already staged.
+- "install optimization"
+  Explicitly authorizes installation of that verified pending core update.
+
+Safety:
+- No arbitrary or unsigned code is installed from a voice phrase.
+- LumiUpdateManager must already report a verified pending core update.
+- Guardian must be installed and signature-trusted.
+- Existing Guardian handoff performs checkpoint and independent verification.
+- Android retains any required APK installation confirmation.
+- Guardian post-update certification and rollback behavior remain intact.
+
+Everything from Code 312 is preserved, including the Code 311 voice fixes and
+Code 312 seamless Möbius animation repair.

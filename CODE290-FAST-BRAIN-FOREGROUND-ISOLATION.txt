@@ -1,0 +1,11 @@
+Lumi Code 290 - Fast Brain Foreground Isolation R9
+
+Purpose:
+- Remove the unstable Fast Brain worker from normal foreground conversation.
+- Keep Fast Brain available only for isolated startup/certification probes and explicit future emergency testing.
+- Route ordinary model conversation directly to the configured stronger provider.
+- Keep instant local rules and live tools ahead of model routing.
+- Never fall back from an OpenAI/remote failure into the unstable Fast Brain worker; use safe offline fallback instead.
+
+Evidence basis:
+- Code 289 diagnostics showed Fast Brain at ~0.3 tok/s, no normal successful local inference, and a process restart after a foreground Fast Brain request while the OpenAI hedge had already answered.

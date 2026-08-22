@@ -1,0 +1,26 @@
+LUMI PHASE 2 — MODULAR RUNTIME
+
+Purpose
+- Stop treating every capability change as a compiled-core change.
+- Signed Lumi content packages can now declare an explicit `modules` array.
+- Lumi validates the entire module set after payload checks and before publishing it active.
+- Active modules are recorded in an atomic runtime registry with a monotonically increasing epoch.
+- Required modules are included in Strong Bootstrap health/certification.
+- Existing whitelisted module roots remain: skills, prompts, ui, voice, home, models, migrations, scripts.
+
+Module declaration example
+{
+  "modules": [
+    {"id":"live-tools","kind":"skills","version":"2","entry":"skills/live-tools.json","format":"json","required":true}
+  ]
+}
+
+Security / rollback
+- Module entries cannot escape Lumi private storage.
+- JSON modules must parse before activation.
+- Module registry is published only after the content transaction succeeds.
+- A malformed required module aborts the update rather than leaving a half-active runtime.
+- Core Java/Kotlin remains signed-APK territory; modules do not gain arbitrary code execution.
+
+Version note
+- Phase 2 sets the next source build to versionCode 275. This also corrects the Phase 1 source package's unchanged 273 versionCode so Guardian has real forward-version progression for the next install.

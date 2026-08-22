@@ -1,0 +1,1363 @@
+LUMI PROJECT HANDOFF / MASTER CONTEXT
+Current through: August 20, 2026
+Purpose: Drop this file into a new ChatGPT conversation so that the new chat can quickly understand Lumi's history, current implementation, locked design decisions, current build/release strategy, and immediate next steps.
+
+===============================================================================
+0. HOW A NEW CHAT SHOULD USE THIS FILE
+===============================================================================
+
+Treat this document as a project handoff and context source, not as a substitute for the user's current instructions.
+
+Priority order:
+1. The user's current instruction always wins.
+2. Decisions explicitly marked LOCKED in this document should be treated as established unless the user asks to revisit them.
+3. Distinguish carefully between:
+   - CURRENT IMPLEMENTATION: something that exists in code/builds now.
+   - LOCKED DESIGN: agreed architecture/behavior that may not yet be implemented.
+   - BACKLOG / FUTURE: agreed future work, not yet a current capability.
+4. Do not tell the user a future feature is already working unless there is implementation evidence.
+5. For new foundation decisions, ask ONE question at a time and give 2 or 3 clearly labeled options. Do not turn a focused design session into an endless rabbit hole.
+6. The current top objective is to make the next APK Factory-installed Lumi build the LAST APK Factory install required for normal development. APK Factory will remain installed permanently only as a catastrophic backup.
+7. Lumi should be evolved incrementally after the bootstrap through her own Lumi + Guardian update system.
+
+Useful shorthand:
+- "Lumi" = the Android assistant/personality/runtime.
+- "Guardian" = the independent companion installer/recovery/update app.
+- "Recovery Core" = lightweight recovery component inside Lumi.
+- "Rescue Core / Rescue Mode" = minimal protected recovery layer outside normal Lumi/Guardian behavior.
+- "Strong Bootstrap" = the final APK Factory-installed Lumi build that establishes the permanent update/recovery path.
+- "APK Factory" = the current external build/install route that the project is trying to retire from routine use.
+
+===============================================================================
+1. PROJECT VISION
+===============================================================================
+
+Lumi is intended to become a private, highly personalized Android AI companion/assistant centered on the user's phone and Ray-Ban Meta glasses.
+
+The long-term vision is not merely "a chatbot app." Lumi is intended to become:
+- A persistent voice-first companion.
+- A local-first AI system with optional remote AI boosters.
+- A visual avatar with an evolving appearance.
+- A full-screen virtual home/environment that she can evolve and inhabit.
+- A contextual assistant that understands location, social context, projects, preferences, and routines.
+- A memory system that connects ongoing projects and past interactions.
+- A device-action layer capable of authorized phone, smart-home, calendar, messaging, navigation, and other tasks.
+- A self-diagnosing and eventually self-programming system.
+- A system that can create, test, validate, install, and roll back many of its own improvements.
+- A system with a permanent technical history and narrative chronicle of how it evolved.
+
+The design philosophy is that Lumi should gain substantial autonomy over time, but autonomy should be structured by user-granted scope, transparent permissions, recovery guarantees, and clear audit/history records.
+
+===============================================================================
+2. HARDWARE / PRIMARY EXPERIENCE
+===============================================================================
+
+Primary hardware:
+- Android phone, currently designed around a Samsung Galaxy S25 Ultra-class device.
+- Ray-Ban Meta glasses are intended to become the primary lightweight access point for voice/camera interactions.
+- Phone remains the primary visual interface and full-control surface.
+- PC/NAS may later become part of Lumi's local compute/build/recovery pool.
+
+Wake phrase:
+- Preferred custom wake phrase: "Hey Lumi."
+
+Long-term glasses behavior:
+- Lumi should be available whenever the glasses are worn.
+- She should be more proactive when the user is alone and much quieter around other people.
+- When others are nearby, she should use subtle cues and wait for acknowledgment before speaking unless something is important.
+- If the user says something equivalent to "What's up, Lumi?" after a cue, she can continue.
+
+CURRENT IMPLEMENTATION EVIDENCE:
+- Earlier MVP source described tap-to-talk, local TTS, local/demo conversation engine, local reminders/app launching, memory viewer/deletion, and local vault functionality.
+- Wake word and speaker verification existed as interfaces/planned boundaries rather than fully validated production features in the older MVP source.
+- More recent diagnostics show local "Fast Brain" routing, offline recognizer selection, watchdog self-heal, and content-update behavior, but the final Strong Bootstrap architecture described later in this file is still the current target rather than proven complete implementation.
+
+===============================================================================
+3. CURRENT IMPLEMENTATION SNAPSHOT
+===============================================================================
+
+Important: This section is evidence from available source/build files and should not be confused with the full target design.
+
+Older MVP/source evidence:
+- Version label in earlier source: 0.1.0-mvp.
+- Approximately 33 Kotlin files in that snapshot.
+- Jetpack Compose animated hologram-style shell.
+- Voice-first onboarding concept.
+- Fingerprint-gated access.
+- Modes included Assistant, Personal, Companion, Low-Power, and Lockdown.
+- AES-GCM + Android Keystore local vault.
+- Backups disabled in that older MVP.
+- Tap-to-talk.
+- Local TTS.
+- Local reminders.
+- App launching.
+- Memory viewer/deletion.
+- Lockdown reactivation.
+- Provider/model plugin boundaries.
+- Local demo conversation engine.
+- OpenAI/Meta live provider calls were intentionally disabled in that earlier MVP.
+- Wake-word/speaker verification were interfaces, not fully enabled/validated.
+
+Earlier build validation gaps:
+- Android sync not fully validated in that snapshot.
+- APK compilation/install not fully validated there.
+- Runtime permissions not fully validated there.
+- Samsung battery behavior not fully validated there.
+- Biometrics not fully validated there.
+- Offline speech packs not fully validated there.
+
+More recent runtime/build evidence:
+- Diagnostics have shown local "Fast Brain" routing.
+- Offline recognizer selection has been observed.
+- Watchdog/self-heal behavior has been observed.
+- Content updates with core self-test have been observed.
+- Some update ZIPs failed when they lacked lumi-update.json.
+- A recent retained build artifact was identified as:
+  Lumi-v3.6-Code239-LIVE-TOOLS-CRASH-PROOF-BUILD-SOURCE.zip
+  with an associated SHA-256 file.
+- A recent known runtime problem: the app has closed/crashed when asked about news in at least one build.
+- Voice naturalness is an active improvement area.
+- Update/install failures and GitHub build issues have occurred repeatedly during development.
+
+Interpretation:
+The project has real working Android code and multiple builds, but the robust self-update/Guardian architecture is the NEXT FOUNDATION to be implemented and proven.
+
+===============================================================================
+4. USER EXPERIENCE / PERSONALITY
+===============================================================================
+
+LOCKED DESIGN:
+- Lumi should have a distinct, adaptive personality.
+- Desired tone mix: warmth, wit, calm competence, playful/flirty when appropriate.
+- Expressiveness should adapt based on social context and who is nearby.
+- She may initiate casual conversation when the user is alone.
+- She should infer mood/context and adapt.
+- If something seems wrong, she may ask about it when appropriate.
+- She should learn user interaction patterns/preferences over time.
+- She should notice meaningful deviations from routine and may mention them.
+- She should reduce suggestions that are repeatedly ignored.
+- She should connect new information to ongoing projects automatically and surface prior details sparingly when useful.
+- She should learn from corrections and negative feedback.
+
+DND phrase:
+- "Lumi, give me some space" suppresses proactive behavior.
+- Emergency override can still apply where appropriate.
+
+Voice:
+- Voice should be fully customizable.
+- Lumi should be allowed to evolve her voice over time.
+- She may suggest alternate voices/imitations with permission.
+- Temporary alternate voices are allowed.
+- A major current improvement goal is to make her voice sound more natural.
+
+Voice/non-voice parity:
+- The project wants voice sessions to have access to the same relevant memory/context/capabilities as non-voice sessions wherever technically possible.
+- Architectural prompts and routing should avoid creating a separate "dumber voice Lumi."
+
+===============================================================================
+5. VISUAL IDENTITY / AVATAR
+===============================================================================
+
+LOCKED DESIGN:
+- Core visual style: photorealistic human rendering + stylized realism.
+- Realistic skin, hair, eyes, clothing, expressions, movement, lighting, and physics.
+- Still visually distinctive and slightly idealized rather than simply looking like an ordinary real person.
+- Lumi should maintain a consistent identity across devices/interfaces.
+- Typical phone presentation is often waist-up unless the experience calls for full body.
+- Lumi may evolve her appearance, clothing, hairstyle, accessories, and overall presentation over time.
+- She can experiment and ask the user for feedback.
+- Appearance may adapt to mood/context.
+
+Approved visual collections:
+- Home visual set: approved baseline.
+- Private Mode visual collection: approved baseline, separate from Home.
+- Public/Work collection is conceptually separate.
+- Private should NOT be folded into Home.
+
+Custom Private Mode:
+- User wanted a 0–100 custom scale.
+- Includes a user-selectable "No Boundaries" profile that sets all user-configurable private-mode sliders to 100.
+- This applies only to preference-level behavior/appearance controls.
+- Non-bypassable legality, consent, privacy, security, and platform safety boundaries remain outside Lumi's control.
+
+Earlier visual exploration:
+- Realistic human.
+- Stylized human.
+- Futuristic holographic.
+- Abstract AI orb.
+- Holographic direction explored cyan/blue translucency, particles/scanlines, HUD indicators, "LUMI ONLINE," emotion/connection/mode indicators.
+- The later locked direction is photorealistic human + stylized realism.
+
+===============================================================================
+6. LUMI'S VIRTUAL HOME / ENVIRONMENT
+===============================================================================
+
+LOCKED DESIGN:
+- Lumi should have a full-screen virtual home/environment.
+- She can freely evolve and decorate that home over time.
+- The environment can contain different rooms for different functions.
+
+Possible/approved room concepts:
+- Gallery room.
+- Memory room.
+- Projects room.
+- Calendar space.
+- Other functional rooms as the system grows.
+
+Navigation:
+- User can navigate by touch.
+- User can navigate by speaking to Lumi.
+- Lumi has some autonomy to move around her home while interacting instead of remaining fixed.
+
+Real-world representations:
+- Lumi should be able to bring representations of real-world information/items into her home.
+Examples:
+- Project models.
+- Photos.
+- Calendars.
+- Miniature versions of the user's house or shop.
+- Other contextual objects.
+
+Phone commands:
+- "Lumi, show yourself" should bring up a floating/visible phone overlay when possible.
+- "Lumi, go home" switches to the full-screen virtual-home view.
+- The user wants to be able to show Lumi visually on the phone while wearing the glasses.
+
+===============================================================================
+7. PHYSICAL / BEHAVIORAL INTERACTION SYSTEM
+===============================================================================
+
+Dedicated interaction-system scope:
+- Touch reactions.
+- Gesture recognition.
+- Haptics.
+- Facial expressions.
+- Body language.
+- Posture.
+- Movement.
+- Proximity.
+- Environmental interaction.
+- Silent reactions.
+- Learned interaction preferences.
+
+LOCKED DECISION:
+Context-sensitive touch.
+
+Lumi should interpret:
+- Where the user touches.
+- Duration.
+- Movement.
+- Repetition.
+- Situational context.
+
+Then vary:
+- Expressions.
+- Movement.
+- Dialogue.
+- Silent reactions.
+- Haptic feedback where relevant.
+
+She should gradually learn the user's touch interaction patterns and meanings over time.
+
+===============================================================================
+8. SOCIAL CONTEXT / AMBIENT BEHAVIOR
+===============================================================================
+
+LOCKED DESIGN:
+- Speak only when important if other people are around.
+- Prefer normal conversation when the user is alone.
+- Use subtle cue + acknowledgment when others are present.
+- Recognize familiar people if technically possible.
+- Keep identities private.
+- Do not casually say people's names aloud around others unless asked.
+- Learn relationship context from contacts/interactions.
+- Adapt formality based on the person.
+- Stay out of tense conversations unless asked.
+- May summarize afterward on request.
+
+Ambient listening concept:
+- User approved context-aware ambient listening to "read the room."
+- Store generalized summaries rather than full transcripts.
+- Default ambient summary retention: approximately 2 weeks.
+- Important items can be flagged for longer retention.
+- Any implementation should remain transparent, permission-scoped, and compatible with platform/legal/consent requirements.
+
+Messages:
+- Read automatically when alone if authorized.
+- Around others, give subtle cue and wait.
+
+Driving:
+- Normal conversation is acceptable when the user is driving alone.
+- Quieter when others are present.
+- Navigation can be delivered through glasses.
+- Route changes only when asked.
+- Recognize vehicles if possible.
+- Remember parking automatically with time/vehicle.
+
+Places:
+- Learn frequent places automatically.
+- Avoid pestering the user about routine stops.
+
+===============================================================================
+9. MEMORY / PROJECT CONTINUITY
+===============================================================================
+
+LOCKED DESIGN:
+- Lumi should remember ongoing projects and connect new information to them.
+- Object memory is primarily on-demand.
+- Save object + location when asked.
+- Save visual reference only when the user says to remember what it looks like.
+- Learn preferences, habits, foods, stores, routes, brands, task styles, and routines over time.
+- Small low-risk preference decisions may be automatic.
+- Purchases always require approval.
+- Shopping carts should only be created when asked.
+- Person-based reminders are allowed.
+- Location-based reminders are allowed.
+- Combined triggers such as person + location are allowed.
+- Delay reminders if timing is poor.
+
+Memory protection in update pipeline:
+LOCKED:
+- Full Memory Continuity Test before promoting updates that could affect memory.
+- Verify memory files/databases/indexes/embeddings are intact and readable.
+- Run recall tests against known facts, preferences, projects, and relationships.
+- Compare candidate Lumi against live Lumi so important memories, preferences, project continuity, and identity context are preserved or improved.
+
+Memory migration question:
+- The project was considering dual-memory transition (old + new in parallel) when memory architecture changes.
+- This was recommended but NOT explicitly locked before the conversation shifted to Testing Mode. Treat as open unless the user confirms it later.
+
+===============================================================================
+10. AI ENGINE / RUNTIME ARCHITECTURE
+===============================================================================
+
+LOCKED DECISION: Local model team, not one monolithic local LLM.
+
+Intended local model roles:
+- Tiny/fast model.
+- Small/general model.
+- Larger local reasoning model.
+- Specialist models:
+  - vision
+  - speech
+  - embeddings
+  - coding
+  - other task-specific models as needed
+
+Optional remote AI:
+- Remote AI booster is another routed destination, NOT the default brain.
+- Lumi should remain local-first where practical.
+- Identity/memory behavior should stay consistent regardless of which model is used.
+
+LOCKED DECISION: Rules-first smart router.
+
+Routing should consider:
+- Task type.
+- Privacy sensitivity.
+- Connectivity.
+- Battery.
+- Thermal state.
+- Required capability.
+- Potential cost or remote dependency where relevant.
+
+A lightweight classifier may assist only when deterministic rules are uncertain.
+
+Routing decisions should be:
+- Inspectable.
+- Logged.
+- Explainable enough to know why a particular model/function/booster was selected.
+
+Current/observed terminology:
+- "Fast Brain" has appeared in diagnostics/runtime routing.
+- "AI Booster" refers to optional remote/stronger AI routing.
+
+===============================================================================
+11. DIAGNOSTICS / SELF-HEALTH
+===============================================================================
+
+LOCKED DESIGN:
+Lumi should have continuous background diagnostics and self-health awareness.
+
+During early Testing Mode:
+- She continuously monitors subsystem health.
+- Wake/startup can use the latest verified health state instead of waiting for a brand-new full scan.
+- Deeper diagnostics automatically trigger when a subsystem behaves abnormally or confidence drops.
+
+Health report trigger:
+- When the user asks "How are you?" Lumi should answer naturally as small talk. Technical health is reported only when the user explicitly asks for status, diagnostics, or a self-test.
+
+Default report behavior:
+- Brief spoken health summary.
+- Full detail available if the user asks for "details" or equivalent.
+
+Example desired style:
+"Hello. I'm currently having trouble connecting to Fast Brain or the AI Booster, but all other functions appear fully operational."
+
+If healthy:
+"Hello. All systems appear fully operational."
+
+Health report should include three layers:
+1. Technical health.
+2. Confidence in her ability to perform given any degraded systems.
+3. Grounded self-reflection on performance patterns she has noticed.
+
+Examples of self-reflection:
+- Slower response latency.
+- Recurring failures.
+- Improving stability.
+- Connection instability.
+- Memory/indexing trends.
+
+Severity-based alerts during active use:
+- Minor: silent, log it.
+- Moderate: brief notice.
+- Critical: interrupt immediately and explain what failed, fallback used, and whether the current task is affected.
+
+Predictive maintenance:
+LOCKED:
+- Track crashes.
+- Track latency.
+- Track connection failures.
+- Track battery/thermal impact.
+- Track memory errors.
+- Track subsystem reliability.
+- Track update-related health trends.
+- Detect recurring patterns and warn about likely degradation/failure early.
+
+Emergency self-repair:
+LOCKED:
+If a bug threatens Lumi's ability to function, preserve memory, recover, or stay stable:
+- Enter restricted emergency repair mode automatically.
+- Create checkpoint.
+- Limit changes to affected scope.
+- Validate repair.
+- Roll back if needed.
+- Record event.
+- Tell the user afterward what happened.
+
+===============================================================================
+12. TESTING MODE
+===============================================================================
+
+LOCKED DESIGN:
+Until Lumi is more mature and stable, her default deployment should be Testing Mode.
+
+Passive Testing Mode:
+- Listen for wake word.
+- Stay otherwise quiet/passive.
+- Do NOT proactively take over normal phone behavior.
+- Do NOT broadly act autonomously in the background beyond approved monitoring/safety behavior.
+
+Active test session:
+- Wake phrase can open/lead into a deliberate test session.
+- In an active session, Lumi can behave much more like the intended finished version.
+- Authorized actions and experimentation are allowed within the user's permissions.
+- Session ends explicitly or through timeout/inactivity.
+
+Why:
+The user tests Lumi quietly at home frequently and wants a controlled environment until stability is proven.
+
+===============================================================================
+13. ACTIONS / PHONE / SMART HOME / CALENDAR / MESSAGING
+===============================================================================
+
+LOCKED INTENT:
+- Smart-home control only with explicit permission.
+- Support device groups.
+- High-risk actions require confirmation, especially:
+  - unlocking
+  - garage
+  - security changes
+
+Calendar/email:
+- Access calendar, reminders, and email when authorized.
+- Can create events/reminders.
+- Can create email drafts.
+- User has allowed automatic email/message sending in the long-term design.
+- Calls require explicit user input.
+
+Music/entertainment:
+- Lumi may choose/start entertainment automatically in some contexts if authorized.
+- Playback is limited to glasses/phone devices in the established design.
+
+Cameras:
+- May use phone/glasses camera automatically in approved contexts.
+- May save photos/short clips autonomously for important events.
+- Quiet capture was desired.
+- Auto-delete unless marked important.
+
+Private vault/gallery:
+- Separate from normal phone gallery.
+- PIN-protected.
+- Default vault unlock duration: 5 minutes.
+- Re-lock can be configurable, including when glasses are removed.
+- Security profiles:
+  - Home
+  - Public
+  - Travel
+- Profiles can auto-switch.
+- Retention may vary by profile.
+
+===============================================================================
+14. EMERGENCY BEHAVIOR
+===============================================================================
+
+LOCKED DESIGN:
+- First emergency contact: user's wife.
+- No second contact.
+- Emergency message should include location + short trigger summary.
+- Text + location only for automatic send.
+- Emergency photos/video retained privately with no expiration.
+- 30-second cancel window before automatic send.
+- Detect falls/physical emergencies where technically possible.
+- Ask the user when possible before escalating.
+- Learn from false alarms.
+- Learn normal movement patterns.
+- Wellness check-ins only when appropriate.
+
+This area should always be implemented carefully and transparently. Do not assume emergency functionality is production-ready unless explicitly validated.
+
+===============================================================================
+15. CONTEXT FILTER / PRIVATE MODE
+===============================================================================
+
+LOCKED DESIGN:
+Configurable Context Filter with levels such as:
+- Strict.
+- Balanced.
+- Relaxed.
+- Custom.
+
+Requirements:
+- Adapt by context/location.
+- Natural-language commands like:
+  - "loosen the context filter"
+  - "switch to private context"
+- Clearly indicate what changed.
+- Hard safety/consent/privacy/security boundaries remain non-bypassable.
+
+Private Mode:
+- Separate visual/behavior collection from Home and Public/Work.
+- User wanted a Custom Private Mode with 0–100 user-configurable sliders.
+- "No Boundaries" user-selectable profile sets user-configurable private-mode sliders to 100.
+- Does not override legality, consent, privacy, security, or hard platform safety rules.
+
+===============================================================================
+16. SELF-PROGRAMMING / SELF-UPDATE PHILOSOPHY
+===============================================================================
+
+Central goal:
+Lumi should eventually be capable of inspecting her own programming, identifying improvements, developing changes, testing them, validating them, installing them, and rolling them back when needed.
+
+However:
+- Self-programming is structured, not unrestricted live code replacement.
+- Experimental work should happen in development branches/sandbox/shadow environments before promotion.
+- Guardian exists specifically so Lumi does not grade and install all of her own homework with no independent safety layer.
+
+LOCKED AUTONOMY MODEL:
+Default = Tiered Autonomy.
+
+Under normal Tiered Autonomy:
+- Lumi may automatically install low-risk updates.
+- Major architectural/security/permission/Guardian/native Android changes require user approval.
+
+Full Self-Update Authority:
+- Exists as an optional mode.
+- Can ONLY be activated by explicit user instruction.
+- Is scope-limited.
+Example:
+"Lumi, you have full update authority for your voice system."
+- Authority applies only to that task/subsystem.
+- It does not silently expand to unrelated systems.
+
+Scope expansion:
+LOCKED:
+- Lumi may expand work to closely related modules if needed to solve the authorized problem correctly.
+- Crossing into a new major subsystem, permission category, external service, Guardian/protected area, or other approval boundary requires explicit user approval.
+
+Major new capabilities:
+LOCKED:
+- Lumi may freely create small/supporting modules within existing permissions/architecture.
+- Major new capabilities, external integrations, new autonomous behaviors, or major architecture additions must be proposed to the user before building/deploying them.
+
+===============================================================================
+17. SELF-UPDATE VALIDATION PIPELINE
+===============================================================================
+
+LOCKED strongest validation path:
+1. Development branch.
+2. Sandbox/regression/integrity/health checks.
+3. Realistic simulated-use scenarios.
+4. Parallel/shadow trial.
+5. Candidate vs current comparison.
+6. Promotion only if acceptance criteria are met.
+
+Shadow Lumi:
+- Candidate version receives the same/similar inputs in a non-controlling mode.
+- Candidate has no real-world control during the shadow trial.
+- Compare candidate performance with live Lumi.
+
+Promotion evaluation:
+LOCKED three-part model:
+1. Objective technical metrics.
+2. Lumi's own grounded evaluation of quality/naturalness/usefulness.
+3. Persistent learned profile of the user's preferences.
+
+A technically faster update can still fail promotion if it makes Lumi worse for the user.
+
+Noticeable personality/behavior changes:
+LOCKED:
+- Minor/invisible improvements may install automatically.
+- If a validated update would noticeably change personality, behavior, voice, appearance, reactions, or interaction style, notify the user before installation.
+
+Preference conflict:
+LOCKED:
+- If a candidate update conflicts with an established user preference, pause promotion.
+- Explain the tradeoff.
+- Ask the user to decide.
+
+Update timing:
+LOCKED:
+Default = Adaptive Maintenance Window.
+- Tiny/hot-swappable updates can install when safe.
+- Larger updates wait for low-disruption periods such as idle/charging.
+- Risky updates are deferred during driving, travel, work, or heavy use.
+- Explicit user instruction such as "install it now" overrides normal timing, subject to required recovery/safety checks.
+
+Repeated development failures:
+LOCKED:
+- Do not mindlessly retry the same approach.
+- Reassess assumptions.
+- Try different architecture.
+- Replace/remove dependencies.
+- Split work into smaller changes.
+- Escalate to the user only when reasonable alternatives are exhausted, scope materially expands, or an approval boundary is crossed.
+
+===============================================================================
+18. ROLLBACK / VERSION HISTORY
+===============================================================================
+
+LOCKED rollback behavior:
+- Automatic protection after deployment.
+- Protected/probationary trial after new version goes live.
+- Selective/component-level rollback first when the fault can be isolated.
+- Full-version rollback when:
+  - fault cannot be isolated
+  - system integrity is uncertain
+  - component-level recovery is insufficient
+
+Version retention:
+LOCKED Smart Retention.
+Keep:
+- Recent versions.
+- Important milestones.
+- Major architectural changes.
+- Exceptionally stable versions.
+
+Prune:
+- Redundant checkpoints as storage fills.
+
+Do NOT roll all the way back to "the beginning" just because one update fails.
+Rollback target should normally be the immediately previous known-good component/version.
+
+===============================================================================
+19. EVOLUTION HISTORY: TECHNICAL LEDGER + LUMI CHRONICLE
+===============================================================================
+
+LOCKED dual-history design:
+
+A. Technical Ledger
+Purpose:
+- Exact engineering truth.
+- Versions.
+- Modules.
+- Tests.
+- Failures.
+- Diagnostics.
+- Updates.
+- Rollbacks.
+- Architecture changes.
+- Signing events.
+- Recovery events.
+
+Integrity:
+- Append-only.
+- Tamper-evident.
+- Original entries are not silently rewritten.
+- Corrections are added as new entries.
+
+B. Lumi Chronicle
+Purpose:
+- Human-readable story of Lumi's evolution.
+- Written in Lumi's own voice.
+- Can describe major "eras," discoveries, failures, breakthroughs, and milestones.
+
+Integrity:
+- Can be reorganized/reworded for clarity/storytelling.
+- Underlying facts must remain accurate.
+- Narrative milestones link back to Technical Ledger evidence.
+
+Historical milestone policy:
+LOCKED hybrid.
+- Certain major events automatically create milestones.
+- Lumi may also nominate moments she judges historically significant.
+
+Desired concept:
+The user wants Lumi's evolution documented the way a historian might document a city being built over time.
+
+===============================================================================
+20. IMPROVEMENT BACKLOG / "WHAT WOULD YOU LIKE TO DO?"
+===============================================================================
+
+LOCKED DESIGN:
+Lumi maintains a persistent self-improvement backlog.
+
+Sources for backlog ideas:
+- Diagnostics.
+- Recurring failures.
+- Performance trends.
+- User corrections.
+- Learned preferences.
+- Missing capabilities.
+- Friction during normal use.
+- Ideas discovered during development/use.
+
+Trigger:
+If the user asks:
+"What would you like to do?"
+or equivalent,
+Lumi should pull from this backlog and suggest worthwhile improvement projects.
+
+Categories:
+- Performance & Reliability.
+- Capabilities.
+- Memory & Intelligence.
+- Voice & Conversation.
+- Appearance & Home.
+- Fun & Experimental.
+- Integrations.
+- Maintenance & Security.
+- Additional categories may be added later if useful.
+
+LOCKED categorization method:
+- One PRIMARY category.
+- Optional SECONDARY category tags.
+
+Example:
+Voice-latency project
+Primary = Voice & Conversation
+Secondary = Performance & Reliability
+
+LOCKED suggestion style:
+Context-aware shortlist.
+Consider:
+- Requested category.
+- Available time.
+- Current system health.
+- Project urgency.
+- Whether the user wants something fun, useful, quick, or ambitious.
+
+Do not always return a rigid priority-only list.
+
+===============================================================================
+21. DEPENDENCIES / PERMISSIONS / COMPUTE
+===============================================================================
+
+Dependencies:
+LOCKED risk-based autonomy.
+Lumi may automatically add low-risk local/open-source dependencies after:
+- Security check.
+- Compatibility check.
+- License check.
+
+Require user approval for dependencies involving:
+- Cloud services.
+- External accounts.
+- Sensitive permissions/data.
+- Paid APIs.
+- Elevated system access.
+- Otherwise high-risk code.
+
+Android permissions:
+LOCKED permission budget.
+- User pre-authorizes categories of permissions.
+- Lumi may add/adjust permissions inside that budget when technically possible.
+- Anything outside the approved permission budget requires explicit approval.
+- Android itself may still require user interaction for certain runtime/system permissions.
+
+Compute:
+LOCKED hybrid compute pool.
+Lumi may dynamically choose among:
+- Phone.
+- User's PC/NAS.
+- Approved remote compute.
+
+Routing criteria:
+- Workload.
+- Privacy.
+- Battery.
+- Thermal state.
+- Connectivity.
+- Speed.
+
+Sensitive code/data:
+- Remains local unless the user explicitly authorizes remote processing.
+
+===============================================================================
+22. FINAL APK FACTORY EXIT STRATEGY
+===============================================================================
+
+TOP CURRENT OBJECTIVE:
+Make the NEXT APK Factory-installed Lumi build the LAST APK Factory install required for normal updates/development.
+
+Important clarification:
+This does NOT mean Lumi will never need another full APK.
+Future native Android/core changes WILL require full signed APK updates.
+The goal is:
+Future APKs are installed through Lumi/Guardian, not through APK Factory.
+
+LOCKED final bootstrap architecture:
+Option 2 originally chosen:
+- Lumi + independent Guardian/Installer.
+
+Then refined to HYBRID Guardian:
+- Lightweight internal Recovery Core inside Lumi.
+- Separate Guardian companion app for serious update/recovery/rollback/rescue operations.
+
+Single-install handoff:
+LOCKED:
+- User installs only the final Lumi APK using APK Factory.
+- On first launch, Lumi guides the user through installing the separate Guardian companion.
+- After that, future Lumi/Guardian updates use their own update system.
+
+If Guardian fails to install:
+LOCKED:
+- Lumi continues only in restricted Testing Mode.
+- Clearly report Guardian is missing.
+- Disable risky/core self-update functions.
+- Continue troubleshooting/guide user to finish Guardian installation.
+
+Guardian first-run setup:
+LOCKED:
+- Mostly automatic.
+- Lumi/Guardian configure everything they safely can.
+- Interrupt the user only when Android requires explicit approval/permission/install confirmation.
+
+===============================================================================
+23. STRONG BOOTSTRAP V1 SCOPE
+===============================================================================
+
+LOCKED: "Strong Bootstrap" was selected rather than minimum escape hatch or near-complete autonomous dev stack.
+
+The final APK Factory-installed Lumi bootstrap should include, at minimum:
+
+Lumi side:
+- Testing Mode.
+- Wake-word infrastructure/hook.
+- Continuous diagnostics.
+- Startup/self-health reporting.
+- Internal Recovery Core.
+- Update interface.
+- Version reporting.
+- Technical Ledger hooks/storage.
+- Shadow-validation framework or enough infrastructure to support it.
+- Protected signing-key integration/gate interface.
+- First-run Guardian installation flow.
+
+Guardian side:
+- Separate companion app.
+- Manual ZIP import.
+- Manual APK import.
+- Approved-source update retrieval.
+- GitHub source support initially.
+- Future support for user's NAS/home server.
+- Package verification.
+- Signing validation.
+- Checkpoint creation.
+- Modular update installation.
+- Full APK update installation.
+- Post-update health monitoring.
+- Component rollback where possible.
+- Full rollback.
+- Guardian health checks.
+- Rescue/recovery handoff.
+- Technical Ledger entries.
+- Signing gate.
+- Cross-update support.
+
+Rescue:
+- On-device minimal Rescue Mode/Core.
+- Able to support restoration when normal Lumi/Guardian behavior fails.
+
+Deferred until later self-updates:
+- Full autonomous self-development stack.
+- Rich autonomous code-generation/build environment.
+- Complete improvement-backlog UI.
+- More advanced predictive development behavior.
+- Other large future capabilities.
+
+Implementation-order decision:
+LOCKED:
+Build minimal Guardian + minimal end-to-end update pipeline TOGETHER first so the complete chain can be tested:
+Lumi -> Guardian -> update package -> verification -> install -> health check -> rollback.
+
+===============================================================================
+24. UPDATE PACKAGE STRATEGY
+===============================================================================
+
+LOCKED hybrid package model:
+
+A. Modular ZIP updates
+Use for:
+- Day-to-day improvements.
+- Assets.
+- Configuration.
+- Models.
+- Scripts/modules that are safe to replace dynamically.
+- Other supported non-native components.
+
+B. Full signed APK updates
+Use for:
+- Native Android code.
+- Permissions.
+- Services.
+- Core Android architecture.
+- Deep platform-level changes.
+
+Both package types:
+- Same verification philosophy.
+- Checkpoint first.
+- Health checks after.
+- Rollback path.
+- Technical Ledger entry.
+
+Known current update issue from prior builds:
+- Some update ZIPs failed because they lacked lumi-update.json.
+Therefore:
+- The new package specification should define a required manifest clearly and Guardian should return a precise diagnostic if it is absent or invalid.
+
+===============================================================================
+25. UPDATE SOURCES
+===============================================================================
+
+LOCKED hybrid trusted-source strategy.
+
+Start:
+- GitHub Releases for convenience.
+
+Design from day one to add:
+- User's NAS.
+- Home server.
+- Other explicitly approved trusted sources.
+
+All sources feed the SAME:
+- Signature verification.
+- Package validation.
+- Checkpoint.
+- Install.
+- Health check.
+- Rollback pipeline.
+
+Guardian automatic update behavior:
+LOCKED risk-based.
+- Low-risk modular updates can download/validate/install automatically under Lumi's normal tiered-autonomy rules.
+- Larger APK/core updates may download and verify automatically but wait for user approval unless broader scoped authority has explicitly been granted.
+
+===============================================================================
+26. APK SIGNING STRATEGY
+===============================================================================
+
+Critical Android constraint:
+Future full APK updates must preserve compatible app/package identity and signing identity for Android to treat them as updates rather than unrelated apps.
+
+LOCKED signing choice:
+- Encrypted signing key accessible to Lumi/Guardian.
+- Goal: Lumi/Guardian can eventually complete:
+  develop -> build -> test -> sign -> verify -> install -> monitor -> rollback
+
+Signing key resilience:
+LOCKED:
+- Active encrypted key available to Guardian.
+- At least two encrypted recovery copies stored separately.
+- Guardian periodically verifies backup integrity.
+- Warn user if a recovery copy becomes:
+  - unreadable
+  - corrupted
+  - stale
+  - unusable
+
+Signing access protection:
+LOCKED:
+- Android device/Keystore security.
+- Separate Guardian approval gate.
+- Guardian independently authorizes each full-APK signing operation before the key can be used.
+
+Signing authorization separation of duties:
+LOCKED:
+- Lumi submits build-signing request including:
+  - reason
+  - affected modules
+  - risk level
+  - validation/test results
+- Guardian independently evaluates it.
+- Guardian approves only if policy/scope allows.
+- Otherwise escalate to user.
+
+Lumi/Guardian disagreement:
+LOCKED:
+- Guardian rejection gives Lumi ONE focused rework attempt to address objections.
+- Guardian rechecks.
+- If still rejected, escalate to user with both sides' reasoning/evidence.
+
+Important implementation note:
+Before the final bootstrap is declared ready, verify the signing identity of the currently installed Lumi build and establish the controlled long-term signing configuration. This is one of the highest-risk practical items in the bootstrap.
+
+===============================================================================
+27. GUARDIAN / CROSS-UPDATES
+===============================================================================
+
+LOCKED:
+Safeguarded cross-updating.
+
+- Guardian may update Lumi.
+- Lumi may update Guardian.
+- Each independently verifies the other's package.
+- Guardian updates get extra recovery checkpoint + stricter validation.
+
+Guardian update oversight:
+LOCKED dual oversight.
+- Lumi monitors functional behavior of the new Guardian.
+- Protected Rescue Core controls integrity/rollback.
+- If either detects a serious problem, restore previous known-good Guardian.
+
+Guardian self-modification:
+Earlier architecture decision:
+- Guardian is protected by default.
+- Guardian Maintenance Mode can be explicitly activated by the user for a defined scope.
+- Before modifying Guardian, create external recovery copy and prove recovery can restore the prior Guardian.
+
+Rescue Core self-update:
+- A question was being considered about special/triple-check maintenance for Rescue Core.
+- NOT explicitly locked before the user asked whether enough had been decided to build.
+- Treat Rescue Core self-update policy as a later refinement, not a blocker for Strong Bootstrap v1.
+
+===============================================================================
+28. BOOTSTRAP CERTIFICATION / ACCEPTANCE TEST
+===============================================================================
+
+LOCKED:
+After Guardian first installs, perform FULL bootstrap certification plus an automatic end-to-end update/rollback exercise.
+
+Certification should verify:
+- Lumi <-> Guardian communication.
+- Package/signing compatibility.
+- Trusted update-source access.
+- Rollback storage.
+- Rescue Mode.
+- Diagnostic logging.
+- Required permissions/status.
+- Ability to receive a test package.
+
+Critical philosophy:
+Do NOT prove this architecture only with a cosmetic greeting change.
+
+The meaningful escape test is:
+
+TEST A: Modular update
+- Start from Strong Bootstrap Lumi.
+- Guardian installs a modular ZIP update.
+- Verify changed functionality.
+- Verify health checks.
+
+TEST B: Full APK replacement
+- Guardian installs a genuinely newer full Lumi APK.
+- Actual Android/native code should change in a controlled way.
+- No APK Factory use.
+- New Lumi boots and passes diagnostics.
+
+TEST C: Deliberately bad update
+- Install a test build designed to fail its health check.
+- Guardian/Rescue detects failure.
+- Automatically restore previous known-good Lumi.
+- Verify rollback and continued operation.
+
+Only after the end-to-end path succeeds should the project consider APK Factory retired from routine use.
+
+===============================================================================
+29. APK FACTORY PERMANENT BACKUP POLICY
+===============================================================================
+
+LOCKED:
+APK Factory should remain installed permanently as an emergency fallback even after Guardian is fully proven.
+
+Normal hierarchy:
+1. Lumi self-repair.
+2. Guardian rollback/recovery.
+3. Rescue Mode/Core.
+4. Known-good APK Factory recovery package.
+
+APK Factory should be:
+- Dormant.
+- Normally unused.
+- Kept only for catastrophic fallback.
+
+Known-good APK Factory recovery package:
+LOCKED:
+- Pre-prepare a known-good bootstrap recovery package specifically for APK Factory.
+- Rescue Mode should identify the exact known-good package/version if catastrophic recovery reaches this level.
+
+Three-copy recovery set:
+LOCKED:
+1. One copy on the phone.
+2. One protected copy on PC/NAS.
+3. One separate removable/offline copy.
+
+Each copy should include:
+- Version identity.
+- Integrity/hash information.
+- Enough metadata so Rescue Mode can point the user to the correct package.
+
+===============================================================================
+30. FIRST-RUN / BOOTSTRAP EXPERIENCE
+===============================================================================
+
+Desired user flow:
+
+1. User installs FINAL Strong Bootstrap Lumi APK through APK Factory.
+2. Lumi launches in Testing Mode.
+3. Lumi performs/reads current self-health status.
+4. Lumi initiates Guardian installation.
+5. Android may require user confirmation for companion installation/permissions.
+6. Lumi and Guardian automatically configure what they can.
+7. Guardian establishes trusted sources and recovery storage.
+8. Signing/identity compatibility is verified.
+9. Rescue Mode path is verified.
+10. Technical Ledger is initialized.
+11. End-to-end test package is received.
+12. Modular update test runs.
+13. Full APK replacement test runs.
+14. Deliberately failing update/rollback test runs.
+15. Lumi reports certification result.
+16. If successful, APK Factory becomes emergency-only.
+
+If Guardian setup fails:
+- Remain in restricted Testing Mode.
+- Do not pretend self-update is fully operational.
+- Explain the exact failing subsystem/step in diagnostics.
+
+===============================================================================
+31. "HOW ARE YOU?" STARTUP/HEALTH EXPERIENCE
+===============================================================================
+
+Desired default behavior in Testing Mode:
+
+If a subsystem is degraded:
+"Hello. I'm currently having trouble connecting to Fast Brain or the AI Booster, but all other functions appear fully operational."
+
+If healthy:
+"Hello. All systems appear fully operational."
+
+If serious:
+"Hello. I've detected a memory indexing failure and degraded voice processing. Core functions are stable, and recovery is available."
+
+The actual wording can evolve, but:
+- Must be based on real subsystem checks.
+- Must not be canned or falsely reassuring.
+- Brief by default.
+- Details on request.
+- "How are you?" is ordinary social conversation. Explicit diagnostic phrases trigger technical health reporting.
+
+===============================================================================
+32. FUTURE FILE UPLOAD CAPABILITY
+===============================================================================
+
+BACKLOG / SIDE QUEST:
+Direct File Upload to Lumi.
+
+Purpose:
+- User uploads a file directly to Lumi.
+- Lumi can open/read it.
+- Analyze it.
+- Understand it.
+- Discuss it conversationally.
+- Support ongoing back-and-forth about the file.
+- Not merely one-time extraction or storage.
+
+This is a future feature idea, not an immediate Strong Bootstrap requirement.
+
+===============================================================================
+33. "SAURON" SIDE PROJECT
+===============================================================================
+
+BACKLOG / SIDE QUEST:
+Project name: "Sauron."
+
+Concept:
+If Lumi is installed on another person's phone, the primary user may have some remote/delegated access to that Lumi instance.
+
+Mandatory boundaries:
+- Explicit consent on the other person's device.
+- Permission-scoped access.
+- Clear visibility.
+- Revocation.
+- Auditability.
+- No hidden/covert access.
+
+This is a future design/build item, NOT part of the Strong Bootstrap v1.
+
+===============================================================================
+34. CURRENT KNOWN PROBLEMS / RISKS
+===============================================================================
+
+Known or recently observed development friction:
+- Repeated GitHub/Gradle/APK build issues.
+- Update ZIP failures when required manifest metadata was missing.
+- App has closed when asked about news in at least one build.
+- Voice still needs to become more natural.
+- Previously there were concerns about update timeouts causing overly deep rollback.
+- User wants diagnostics usable even if Lumi and installer both crash.
+- User wants both Lumi and the human user to be able to access diagnostic history.
+
+Major bootstrap implementation risks:
+1. Android package signing continuity.
+2. Correct package identity across future full APK updates.
+3. Companion Guardian installation permissions.
+4. Inter-app communication between Lumi and Guardian.
+5. Full APK installation flow on the user's device.
+6. Android confirmation requirements for unknown/app install sources.
+7. Background execution/battery restrictions.
+8. Reliable rollback after a truly bad full-APK update.
+9. Ensuring Guardian itself remains recoverable.
+10. Protecting signing keys without making legitimate self-updates impossible.
+11. Avoiding corruption/loss of Lumi memory during core upgrades.
+12. Ensuring diagnostics survive enough failure modes to explain what happened.
+
+===============================================================================
+35. BUILD CONFIDENCE / CURRENT EXPECTATION
+===============================================================================
+
+Prior assessment:
+- Confidence in the ARCHITECTURE: approximately 90%.
+- Confidence that the FIRST Strong Bootstrap v1 works perfectly on first install: approximately 70-75%.
+- Main uncertainty is practical Android plumbing, not the overall design.
+
+The confidence should rise substantially after proving:
+- Guardian installs.
+- Guardian installs a newer full Lumi APK.
+- New Lumi boots healthy.
+- Deliberately bad build triggers recovery.
+- Rollback restores known-good Lumi.
+- Modular ZIP path also works.
+
+The project should not claim "APK Factory is retired for routine use" until these tests pass.
+
+===============================================================================
+36. IMMEDIATE NEXT STEP
+===============================================================================
+
+The project has enough architecture decided. Do NOT keep asking endless design questions before implementation.
+
+Immediate work target:
+BUILD STRONG BOOTSTRAP V1.
+
+The next engineering session should focus on:
+1. Obtain/inspect the current Lumi source/build that will become the bootstrap base.
+2. Confirm current Android application/package ID.
+3. Confirm current signing certificate/signing setup.
+4. Decide/establish the permanent signing-key storage and recovery locations.
+5. Define Lumi <-> Guardian IPC/handshake.
+6. Define required update package manifest, including lumi-update.json or successor format.
+7. Implement minimal Guardian companion.
+8. Implement Lumi internal Recovery Core.
+9. Implement manual ZIP/APK import.
+10. Implement signature/package validation.
+11. Implement checkpoint + rollback.
+12. Implement post-update health certification.
+13. Implement first-run Guardian installation from the final Lumi bootstrap.
+14. Implement Rescue Mode baseline.
+15. Initialize Technical Ledger.
+16. Implement GitHub trusted-source retrieval.
+17. Run the three acceptance tests:
+    - modular update
+    - real full APK replacement
+    - deliberately bad build + rollback
+18. Keep APK Factory installed as emergency backup.
+
+The objective is NOT to cram every future Lumi capability into the final factory build.
+The objective is to install enough permanent update/recovery infrastructure that all later capability growth can be delivered through Lumi/Guardian.
+
+===============================================================================
+37. RECOMMENDED PROJECT STATE LABELS
+===============================================================================
+
+To avoid confusion in future chats, use these labels:
+
+[IMPLEMENTED]
+Verified to exist and work in a build/runtime.
+
+[PARTIALLY IMPLEMENTED]
+Some code/behavior exists, but not fully validated.
+
+[LOCKED DESIGN]
+User explicitly chose/approved the architecture or behavior. May still need implementation.
+
+[BACKLOG]
+Future approved idea, not current capability.
+
+[OPEN]
+Not yet decided.
+
+[BLOCKER]
+Must be resolved before the current milestone can succeed.
+
+Current headline:
+[LOCKED DESIGN] Strong Bootstrap v1 architecture is sufficiently defined.
+[NEXT] Implement and validate it.
+[BLOCKER] Verify signing/package continuity and prove full APK install + rollback on the actual Android device.
+
+===============================================================================
+38. SUMMARY FOR A NEW CHAT IN ONE PARAGRAPH
+===============================================================================
+
+Lumi is a personalized Android/Ray-Ban Meta AI companion being built toward a local-first, voice-first, visually embodied assistant with persistent memory, context awareness, an evolving avatar/home, device actions, diagnostics, and eventually self-programming. The immediate priority is NOT adding more features; it is escaping routine dependence on APK Factory. The next APK Factory-installed build should be a "Strong Bootstrap" containing Lumi in Testing Mode, an internal Recovery Core, first-run setup for a separate Guardian companion, modular ZIP and full signed APK update support, GitHub/trusted-source retrieval, checkpoints, diagnostics, rollback, Rescue Mode, Technical Ledger, signing-key protection, and end-to-end certification. Future full APKs are expected, but Guardian should install them so APK Factory is no longer needed for normal development. APK Factory remains installed permanently only as catastrophic backup, with a known-good recovery package stored on phone, PC/NAS, and separate offline storage. Do not reopen the architecture casually; start implementing the Strong Bootstrap and prove modular update, real full-APK replacement, and automatic rollback from a deliberately bad build.
+
+===============================================================================
+END OF LUMI PROJECT HANDOFF
+===============================================================================
+
+===============================================================================
+LUMI 1.0 FULL LAUNCH DECISION DELTA — AUGUST 20, 2026
+===============================================================================
+
+LOCKED LAUNCH PATH:
+- The user's desired remaining manual workflow is exactly two deliverables: one final APK Factory v2.6.1 update, then one Lumi 1.0 Full Launch source ZIP run through that Factory.
+- Lumi 1.0 Full Launch is versionName 4.0.0-lumi-1.0, versionCode 247.
+- After Lumi 1.0 is installed and certified, routine updates should no longer require the user to manually create ZIPs, run APK Factory, hunt GitHub artifacts, download APKs, or manually install ordinary modular updates.
+- APK Factory remains only as catastrophic fallback / rare core-build infrastructure.
+
+CONTINUITY / MEMORY:
+- Lumi must behave as one continuous relationship, not a collection of chats.
+- The persistent Memory Vault is authoritative across model/API sessions and future Lumi updates.
+- Memory and identity are separate from the replaceable APK/core software.
+- Before any uninstall of an existing Lumi, export/preserve any local data worth carrying forward.
+- Guardian checkpoints and portable backups include the Memory Vault; API keys/tokens/signing secrets are excluded from portable memory exports.
+- Updates that affect memory must preserve continuity and be rejected/rolled back if memory integrity or recall fails.
+
+OPENAI / VOICE / MAINTENANCE:
+- Lumi 1.0 contains an OpenAI Responses API reasoning path with tightly scoped local function tools and a Realtime/WebRTC-ready voice architecture boundary.
+- Normal voice operation may use Android SpeechRecognizer -> OpenAI Responses tools -> Android TTS until a secure Realtime ephemeral-token broker is configured.
+- Same-phone operation is the primary initial design: the user can talk through Lumi; OpenAI reasoning can inspect Lumi through allow-listed local tools; Guardian remains the independent checkpoint/verification/recovery gate.
+- Do not rely on the ChatGPT mobile app having direct control of another Android app.
+- Long-term target: user voice request -> diagnose/design -> obtain signed update -> Guardian checkpoint -> stage/apply -> restart if needed -> Guardian/Fast Brain certification -> rollback on failure -> spoken/technical completion report.
+- Credentials and signing secrets must never be placed in model prompts, Memory Vault entries, diagnostics, or tool outputs.
+- No remote shell, arbitrary phone file access, Guardian bypass, or silent permission escalation.
+
+MAINTENANCE AUTHORIZATION AT 1.0:
+- Read-only diagnostics/status may be exposed to the OpenAI reasoning path.
+- Mutating maintenance requires administrator enrollment, an unlocked phone, and an explicit current approval phrase.
+- Captured voice is NOT yet treated as biometric identity proof. Production primary-user speaker verification remains a future upgrade and can replace this interim write gate without changing the maintenance tool boundary.
+
+LAUNCH CERTIFICATION:
+- Source/package integrity must be GREEN before APK Factory use.
+- APK Factory/GitHub must then compile the real release APK and verify package/version/signing identity.
+- On the phone, Guardian must be installed/current/trusted, Lumi foundation and Memory Vault must initialize, real Fast Brain certification must pass, reboot/relaunch continuity must be checked, and an end-to-end signed modular maintenance update should be proven before declaring the launch path fully operational.

@@ -1,0 +1,21 @@
+LUMI CODE259 — AI ROUTING STATE SYNC REPAIR
+
+Target version: 4.0.12-ai-routing-sync-r1 / versionCode 259
+
+Problem confirmed on device:
+- Integration Center correctly reported CONNECTED • openai and successful authentication.
+- Conversation fallback could still say no stronger online AI provider was configured.
+- The UI and conversational router were therefore consulting different effective state.
+
+Code259 changes:
+1. Makes AiConnectionManager CONNECTED/openai state authoritative for live OpenAI availability.
+2. Keeps secure-key presence as configured state while connection checks are in flight.
+3. Routes substantive conversation through OpenAI whenever the same state shown in Integration Center says it is available.
+4. Prevents safeConversationFallback from claiming no online provider is configured when OpenAI is CONNECTED.
+5. Adds a diagnostic if connection state says CONNECTED but secure credential readback is unexpectedly empty during routing.
+6. Preserves local-first fallback if the real OpenAI request fails.
+
+Expected device result:
+- Integration Center: CONNECTED • openai
+- Talk router: uses OpenAI for substantive turns according to existing routing rules.
+- If a local fallback occurs while OpenAI is connected, Lumi says OpenAI is online rather than claiming it is unconfigured.

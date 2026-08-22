@@ -1,0 +1,15 @@
+LUMI CODE251 AI PROVIDER BOOTSTRAP
+
+Purpose:
+- Stop reporting the vague “no stronger provider configured” message when the real issue can be
+  determined more precisely.
+- Recover older locally stored provider preference names where possible.
+- Auto-select OpenAI when a valid stored OpenAI credential exists.
+- Auto-select a configured remote endpoint when appropriate.
+- Refresh provider health whenever the user asks about Lumi's AI.
+- Surface provider configuration state in Integration Center and diagnostics.
+
+Security:
+- No API key is embedded in this build.
+- Existing user-supplied keys remain in Android Keystore-backed encrypted storage.
+- Legacy plaintext preferences are migrated locally and removed.

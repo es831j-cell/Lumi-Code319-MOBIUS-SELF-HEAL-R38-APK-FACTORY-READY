@@ -1,0 +1,17 @@
+LUMI CODE 302 — BRIDGE / SPEECH / UI REPAIR R21
+
+1. UI regression repair
+- Restores Code 300 standard button typography/padding instead of inflating every visible button.
+- Main Listen / Stop Listening row uses a controlled 64dp height without distorting menu/action layouts.
+
+2. Maintenance Bridge deterministic handshake
+- Bridge status/connection questions now execute check_maintenance_bridge locally before OpenAI explains the result.
+- Every maintenance tool invocation emits MAINTENANCE_TOOL diagnostics with transaction id.
+- Guardian remains signature/provider protected; no shell or arbitrary file access was added.
+
+3. Speech code-7 recovery
+- If speech audio is genuinely detected but Android returns NO_MATCH twice in succession, Lumi destroys and recreates the recognizer instance instead of backing off through repeated silence loops.
+- Successful recognition clears the poisoned-session streak.
+
+Base: Code 301 R20
+Target: 4.0.55-bridge-speech-ui-repair-r21 / code 302

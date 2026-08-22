@@ -1,0 +1,11 @@
+LUMI CODE260 — TALK / OPENAI ROUTE REPAIR
+Target: 4.0.13-talk-openai-route-r1 / versionCode 260
+
+Fixes:
+- Talk no longer uses the legacy open-model booster as the implicit authority for stronger-AI availability.
+- A successful OpenAI setup/connection latches a non-secret verified routing flag.
+- strongBrainAvailable() honors Connection Manager state, the verified route latch, provider selection, or secure key presence.
+- requestBestStrongReply() always prefers OpenAI when its secure key is readable.
+- If OpenAI is verified but secure key readback unexpectedly fails, Lumi reports that exact condition instead of falsely saying no provider is configured.
+- Local fallback wording cannot contradict a verified/configured OpenAI connection.
+- Explicit OpenAI disconnect clears the route latch.

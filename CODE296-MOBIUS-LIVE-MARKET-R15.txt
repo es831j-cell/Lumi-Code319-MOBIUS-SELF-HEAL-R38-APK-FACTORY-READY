@@ -1,0 +1,29 @@
+LUMI CODE 296 — ANIMATED MÖBIUS + LIVE MARKET REPAIR R15
+
+Built from the corrected Code 295 R14.1 baseline.
+
+Animated Möbius:
+- Keeps the existing Möbius artwork.
+- Adds a lightweight custom Android overlay rather than GIF/video playback.
+- Idle: slow, subtle traveling energy.
+- Listening: brighter/faster flow.
+- Thinking: faster pulse.
+- Speaking: strongest traveling glow.
+- Fault: restrained red diagnostic pulse.
+- Uses one ValueAnimator and Canvas drawing to keep overhead modest.
+
+Live market repair:
+- Normalizes spoken company names to tickers before querying providers.
+- Reddit -> RDDT (the failure seen in the Code 295 diagnostic).
+- Includes common aliases such as Apple/AAPL, Microsoft/MSFT, Amazon/AMZN,
+  Alphabet/GOOGL, Meta/META, Tesla/TSLA, Nvidia/NVDA and others.
+- Adds a daily Yahoo chart fallback in addition to existing intraday Yahoo and Stooq providers.
+
+Retained from Code 295:
+- post-TTS recognizer recovery
+- silent automatic listening restarts
+- on-device SpeechRecognizer preference
+- TTS self-heal watchdog
+- direct time/weather routing
+- foreground Fast Brain isolation
+- speaker-confidence check

@@ -1,0 +1,19 @@
+LUMI CODE 292 — LIVE DATA + FACTORY EXIT FOUNDATION R11
+
+Purpose
+- Make time instant and local from Android's system clock.
+- Make weather use a dedicated online weather source first.
+- Use Android last-known location when available.
+- If Android has no usable location fix, use wttr.in's network-derived coarse location fallback.
+- Keep Fast Brain out of foreground conversation.
+- Preserve Code291 listening/online routing changes.
+- Preserve Lumi Update Center + Guardian signed core-update handoff so APK Factory can become emergency-only after this foundation build is installed and Guardian setup is certified.
+
+Expected behavior
+- “What time is it?” -> device-clock route; no OpenAI/network required.
+- “What’s the weather?” -> live-tool weather route using Android location or network-location fallback.
+- “What’s the weather in Dallas?” -> explicit-place dedicated weather route.
+- Routine future signed Lumi core packages -> Lumi Update Center -> Guardian verification/checkpoint -> Android install flow.
+
+Important Android boundary
+Executable APK replacement remains subject to Android package-install security. This foundation removes APK Factory from the normal Lumi update workflow; it does not bypass Android's installer/security model.

@@ -1,0 +1,19 @@
+{
+  "schema": "lumi.phase4.post-change-certification.v1",
+  "owner": "guardian",
+  "maxCertificationAttempts": 3,
+  "checks": [
+    "strong_bootstrap_health",
+    "real_fast_brain_probe",
+    "module_registry_health",
+    "speech_and_microphone_availability",
+    "guardian_identity_and_boot_heartbeat"
+  ],
+  "successState": "CERTIFIED",
+  "failureState": "CERTIFICATION_FAILED",
+  "coreFailurePolicy": {
+    "restoreStateCheckpoint": true,
+    "automaticApkDowngrade": false,
+    "markRecoveryRequired": true
+  }
+}

@@ -1,0 +1,12 @@
+LUMI CODE 289 • RESPONSIVE ROUTING R8
+
+Bundled fixes:
+1. Interactive Fast Brain deadline reduced from 18 seconds to 4.5 seconds.
+2. OpenAI hedge starts after 2.8 seconds when local inference is still thinking; late local result is ignored for that turn.
+3. Cold-start/recovery probe remains at 65 seconds so model startup is not mistaken for failure.
+4. Obvious live-data intents bypass Fast Brain when a dedicated tool match is unavailable.
+5. Main screen shows a simple brain-state strip: local ready, warming, recovering, or OpenAI fallback.
+6. Diagnostics now distinguish model file presence, worker loaded state, responsiveness, quarantine state, and last successful local inference.
+7. Conversation idle timeout extended from 5 to 15 minutes to reduce unexpected listening pauses.
+8. Code288 permanent Listen / Stop listening buttons retained.
+9. Code285+ process-isolation safety retained: local native failure cannot deliberately kill Lumi's foreground UI.

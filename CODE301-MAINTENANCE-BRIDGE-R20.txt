@@ -1,0 +1,29 @@
+LUMI CODE301 — MAINTENANCE BRIDGE R20
+
+Purpose
+- Repair the missing OpenAI -> Lumi maintenance tools -> Guardian handoff seen in Code300 diagnostics.
+
+Root cause fixed
+- Code300 already contained Guardian-controlled maintenance tools, but OpenAIReasoningClient attached them only when a narrow maintenanceIntent() keyword test passed.
+- Natural follow-ups such as "make the connection", "connect it", and bridge-specific language could therefore route to OpenAI as ordinary chat with NO maintenance tools attached.
+
+Changes
+1. OpenAI maintenance intent now recognizes maintenance bridge, bridge connection, Guardian connection, and connection verbs.
+2. Maintenance intent can inherit from Lumi's immediately preceding maintenance/Guardian/bridge reply for short follow-ups including "make the connection", "connect it", "do it", and "build it".
+3. MainActivity conversational maintenance routing uses the same bridge/connection vocabulary so the outer router and OpenAI tool host no longer disagree.
+4. Added read-only check_maintenance_bridge tool. It verifies directMaintenanceHostV1 readiness, Guardian reachability/version, certification state, maintenance revocation, pending request, and trusted-build-relay state.
+5. Existing write authorization and Guardian independent verification remain unchanged. No shell, arbitrary file access, Guardian bypass, or silent permission escalation was added.
+
+Expected behavior
+- "What's wrong with the maintenance bridge?" -> guarded OpenAI maintenance path with tools attached.
+- "Can you make the connection?" after bridge discussion -> stays in guarded maintenance path instead of ordinary chat.
+- OpenAI can inspect live bridge state with check_maintenance_bridge and then use the existing Guardian-controlled maintenance tools when the owner explicitly approves a write.
+
+Version
+- Lumi versionCode 301
+- Lumi versionName 4.0.54-maintenance-bridge-r20
+- Guardian remains 1.7 trusted-build-relay / versionCode 8.
+
+Touch target cleanup carried forward from the immediately preceding owner request
+- Standard Lumi menu/action buttons now use 16sp text and a 64dp minimum height with larger padding.
+- Main-screen Listen and Stop listening controls are 72dp tall for easier one-handed use.

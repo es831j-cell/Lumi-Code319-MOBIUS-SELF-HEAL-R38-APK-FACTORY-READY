@@ -1,0 +1,14 @@
+LUMI CODE252 OPENAI SETUP
+
+Adds:
+- Configure OpenAI button in Integration Center.
+- Password-masked API key entry.
+- Android Keystore-backed encrypted storage via SecretStore.
+- Automatic provider switch to OpenAI after save.
+- Immediate connection test after save.
+- Explicit auth-error and rate-limit diagnostics.
+- Manual "Test AI connection now" control.
+
+Security:
+- No API key is embedded in the APK/source ZIP.
+- Keys are never written to diagnostics or logs.

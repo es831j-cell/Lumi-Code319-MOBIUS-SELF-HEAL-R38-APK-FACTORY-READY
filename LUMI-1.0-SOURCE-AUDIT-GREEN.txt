@@ -1,0 +1,69 @@
+LUMI 1.0 CODE247 GUARDIAN EMBED FIX r1 — SOURCE AUDIT
+Date: 2026-08-20
+STATUS: GREEN FOR SOURCE / PACKAGING READINESS
+Checks passed: 43 / 43
+
+ROOT CAUSE PROVEN FROM USER APK FACTORY OUTPUT
+- APK inspected: app-debug.apk
+- SHA-256: e1262853f9e2f2998d8ae9a36906486e7bd94825256128456d0889faa02620ed
+- Embedded res/raw/lumi_guardian.apk size: 52 bytes
+- Embedded bytes were exactly the placeholder marker, not an APK.
+- APK Factory 2.6.1 uses its own dedicated workflow and runs `gradle assembleDebug`; therefore the source-owned release-workflow replacement step was bypassed.
+
+PATCH
+- app preDebugBuild now builds/embeds Guardian debug before resource packaging.
+- app preReleaseBuild now builds/embeds Guardian release before resource packaging.
+- Root assembleDebug explicitly builds :app:assembleDebug for APK Factory.
+- After app packaging, standalone Guardian debug APK output is removed so APK Factory sees only the primary Lumi APK in its artifact glob.
+- Source-owned release workflow additionally extracts and validates the embedded Guardian from the final Lumi APK and requires byte-for-byte equality with the built Guardian.
+- Visible Lumi versionName is 4.0.0-lumi-1.0-r1; versionCode remains 247.
+
+CHECKS
+[PASS] 01. Observed failing APK is structurally valid ZIP
+[PASS] 02. Observed failing APK contains embedded Guardian resource
+[PASS] 03. Observed embedded Guardian is exactly 52-byte placeholder (52 bytes)
+[PASS] 04. Required source file present: settings.gradle
+[PASS] 05. Required source file present: build.gradle
+[PASS] 06. Required source file present: app/build.gradle
+[PASS] 07. Required source file present: guardian/build.gradle
+[PASS] 08. Required source file present: app/src/main/AndroidManifest.xml
+[PASS] 09. Required source file present: guardian/src/main/AndroidManifest.xml
+[PASS] 10. Required source file present: .github/workflows/build-apk.yml
+[PASS] 11. Required source file present: app/src/main/res/raw/lumi_guardian.apk
+[PASS] 12. Required source file present: zzzz-LUMI-BUILD-READY.txt
+[PASS] 13. Required source file present: SOURCE-SHA256SUMS.txt
+[PASS] 14. Required source file present: GUARDIAN-EMBED-FIX-r1.txt
+[PASS] 15. Lumi versionCode remains 247
+[PASS] 16. Lumi visible version identifies r1 fix
+[PASS] 17. Guardian versionCode is 3
+[PASS] 18. Guardian versionName is Lumi 1.0 companion
+[PASS] 19. Debug Guardian embed task registered
+[PASS] 20. Release Guardian embed task registered
+[PASS] 21. App prebuild is wired to embed task
+[PASS] 22. Embed task requires Guardian APK >4096 bytes
+[PASS] 23. Embed task checks ZIP/APK magic
+[PASS] 24. Embed task rejects truncated copy
+[PASS] 25. Root APK Factory assembleDebug task exists
+[PASS] 26. Root assembleDebug targets :app:assembleDebug
+[PASS] 27. Standalone Guardian debug artifact cleanup exists
+[PASS] 28. Cleanup targets Guardian debug APK output
+[PASS] 29. Source workflow builds Guardian release
+[PASS] 30. Source workflow embeds Guardian before release app
+[PASS] 31. Workflow extracts embedded Guardian from final Lumi APK
+[PASS] 32. Workflow validates embedded Guardian size
+[PASS] 33. Workflow validates embedded Guardian signature
+[PASS] 34. Workflow validates embedded Guardian package/version
+[PASS] 35. Workflow requires embedded Guardian byte-for-byte match
+[PASS] 36. Workflow checks r1 Lumi versionName
+[PASS] 37. XML parses: app/src/main/AndroidManifest.xml
+[PASS] 38. XML parses: guardian/src/main/AndroidManifest.xml
+[PASS] 39. All 9 JSON policy/config files parse
+[PASS] 40. GitHub Actions YAML parses
+[PASS] 41. Source placeholder remains exact known marker (52 bytes)
+[PASS] 42. Source checksum inventory validates (87 entries)
+[PASS] 43. No GitHub/OpenAI token literal found in text source
+
+RUNTIME GATE
+- This audit does not claim the patched APK has compiled or run on the phone.
+- Next: run the patched source ZIP through APK Factory 2.6.1, install it over current Lumi, confirm the Update Center reports 4.0.0-lumi-1.0-r1 / code 247, then install embedded Guardian and confirm Guardian 1.2 / code 3.
+- Only after Guardian/Fast Brain certification passes should Lumi 1.0 be considered device-green.

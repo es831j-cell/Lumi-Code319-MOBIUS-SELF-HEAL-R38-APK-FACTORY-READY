@@ -1,0 +1,16 @@
+LUMI CODE316 • ROOT IDENTITY HIERARCHY R35
+
+Adds:
+- Exactly one root administrator authority.
+- Administrator phrase: "there can be only one" opens a 10-minute privileged admin session after enrollment.
+- Core/maintenance writes now require an active root-admin session plus the existing explicit approval and unlocked-device checks.
+- Provisional contact-card registry. New people begin with permission level NONE and cannot gain privileged/root authority automatically.
+- Private-review queue for relationship, trust and permissions. Lumi will not discuss those settings in the initial public introduction flow.
+- Conversational hooks:
+    "new person" / "someone new is here" -> asks the person's name and creates a provisional card.
+    "identity status" / "who has access" -> reports hierarchy status.
+    "review new person" -> only proceeds inside root-admin session.
+- Existing optimize speech / optimize yourself / install optimization pipeline retained.
+
+Speaker-ID truth boundary:
+Android SpeechRecognizer currently returns recognized text but not a clean per-turn speaker audio sample to this activity. Code316 therefore does NOT claim automatic unknown-speaker discrimination is solved. The identity/contact-card pipeline is real and ready for a future per-turn speaker embedding source. Existing SpeakerVerifier remains a soft personalization signal, not a security biometric.

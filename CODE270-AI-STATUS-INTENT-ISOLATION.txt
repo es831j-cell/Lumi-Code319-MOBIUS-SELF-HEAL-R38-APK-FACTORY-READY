@@ -1,0 +1,16 @@
+LUMI CODE 270 — AI STATUS INTENT ISOLATION
+
+Target: 4.0.23-ai-status-intent-isolation-r1 / versionCode 270
+
+FIXES
+- AI/provider status replies are now restricted to explicit AI-status questions.
+- Ordinary conversation can no longer be replaced by provider telemetry merely because a local answer falls back.
+- Removed the catch-all fallback that returned OpenAI status for every failed local answer when OpenAI was configured.
+- Added spoken aliases for “run self diagnostics” and “run self diagnostic.”
+- Status questions remain foreground-safe and may refresh provider reachability only in the background.
+
+REGRESSION CHECKS
+1. “How is your AI?” -> AI status only.
+2. “What’s going on with SpaceX today?” -> normal routing, never AI status.
+3. “Run self diagnostics” -> core self-test result.
+4. An unrelated local-model miss -> neutral answer fallback, never provider status.

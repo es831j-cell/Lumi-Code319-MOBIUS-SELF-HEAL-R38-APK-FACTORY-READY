@@ -1,0 +1,17 @@
+LUMI CODE 300 — STATIC MÖBIUS VISUAL ROLLBACK R19
+
+Visual rollback:
+- Restores the clean original Möbius artwork as a normal static ImageView.
+- Removes bitmap-mesh deformation.
+- Removes moving dots / glow overlay from the Home screen.
+- Removes image rotation / tilt / breathing motion.
+- Background and Möbius remain visually unchanged while Lumi runs.
+
+Retained from Code 299:
+- network-capable Google SpeechRecognizer
+- partial transcript capture and salvage after no-match/code 7
+- hard manual Stop Listening latch
+- LISTENING / PAUSED / READY / THINKING / SPEAKING indicator
+- TTS self-heal
+- post-TTS recognizer recovery
+- time/weather/live routing improvements

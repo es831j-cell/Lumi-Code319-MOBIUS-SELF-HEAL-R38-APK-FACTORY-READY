@@ -1,0 +1,28 @@
+LUMI CODE 314 — CONVERSATIONAL OPTIMIZER R33
+
+Adds natural targeted optimization approval:
+
+Examples:
+- "optimize speech"
+- "optimize animation"
+- "optimize battery"
+- "optimize conversation"
+
+Flow:
+1. Lumi normalizes the requested subsystem and runs bounded self-analysis.
+2. If Guardian is trusted and a verified core update is already staged, Lumi
+   describes the target and asks whether the user wants it installed.
+3. A short contextual "yes", "yeah", "yep", "sure", "do it", "install it", or
+   "go ahead" authorizes ONLY the exact staged package Lumi just named.
+4. Approval expires after 120 seconds and is invalidated if the staged package changes.
+5. "no", "nope", "not now", or "cancel" clears the pending approval.
+6. Guardian retains checkpoint, verification, installation and rollback duties.
+7. Lumi marks a post-install diagnostic pending before handoff.
+8. On the updated build's next runtime start, Lumi runs the core self-test,
+   records the result, and reports pass/fail in conversation.
+
+Important:
+- Lumi does not fabricate an optimization package.
+- She only offers installation when LumiUpdateManager already has a verified
+  staged core update and Guardian is signature-trusted.
+- Android/Guardian installation protections remain intact.

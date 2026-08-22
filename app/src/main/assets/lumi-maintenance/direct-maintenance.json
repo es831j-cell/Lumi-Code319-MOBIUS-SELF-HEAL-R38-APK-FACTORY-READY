@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "feature": "direct-maintenance-bridge",
+  "enabled": true,
+  "mode": "same-phone-openai-tools-with-optional-relay",
+  "phoneBehavior": {
+    "wakeScreen": false,
+    "playSound": false,
+    "vibrate": false,
+    "speak": false,
+    "headsUpNotification": false,
+    "fullScreenIntent": false,
+    "deferUserApprovalUntilDeviceAvailable": true
+  },
+  "transport": {
+    "direction": "same-phone-local-tools; optional outbound-only relay",
+    "requireHttps": true,
+    "allowCleartext": false,
+    "relayUrl": "",
+    "pollIntervalSeconds": 60,
+    "maxBackoffSeconds": 900,
+    "requireSignedCommands": true,
+    "rejectReplay": true
+  },
+  "authorization": {
+    "defaultDeny": true,
+    "allowRemoteShell": false,
+    "allowArbitraryFileAccess": false,
+    "scopes": [
+      "diagnostics.read",
+      "manifest.read",
+      "updates.stage",
+      "updates.test",
+      "updates.install_request",
+      "updates.rollback"
+    ],
+    "interimWriteGate": "admin enrollment + unlocked device + explicit approval phrase; captured voice is not yet treated as biometric proof"
+  },
+  "guardian": {
+    "requiredForInstall": true,
+    "requireCheckpoint": true,
+    "requireVerification": true,
+    "requirePostUpdateCertification": true,
+    "automaticRollbackOnFailure": true
+  },
+  "reporting": {
+    "alwaysReturnTerminalResult": true,
+    "successRequiresPostUpdatePass": true,
+    "failureRequiresStageAndDiagnostic": true,
+    "persistToTechnicalLedger": true
+  },
+  "nativeHost": {
+    "required": true,
+    "capability": "directMaintenanceHostV1",
+    "note": "Implemented in Lumi 1.0 core as allow-listed OpenAI/local maintenance tools; optional outbound relay remains disabled until explicitly configured."
+  }
+}

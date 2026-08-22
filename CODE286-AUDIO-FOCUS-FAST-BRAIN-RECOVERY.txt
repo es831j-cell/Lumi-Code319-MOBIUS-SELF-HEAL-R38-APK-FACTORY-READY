@@ -1,0 +1,18 @@
+LUMI CODE 286 - AUDIO FOCUS + FAST BRAIN RECOVERY
+
+Built from Code 285 after the 2026-08-21 18:59 diagnostics.
+
+Changes
+1. Continuous listening no longer requests or holds media audio focus.
+2. TTS requests AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK instead of TRANSIENT_EXCLUSIVE.
+3. TTS accepts delayed focus gain and releases focus immediately when speech finishes.
+4. A denied media-focus request no longer prevents SpeechRecognizer from running.
+5. Fast Brain safety quarantine reduced from 30 minutes to 5 minutes.
+6. Recovery retry suppression reduced from 6 hours to 5 minutes now that inference runs in the isolated :fastbrain worker process.
+7. Fast Brain worker failure still cannot terminate Lumi's foreground process.
+8. Version bumped to 4.0.39-audio-focus-fast-brain-recovery-r5 / code 286.
+
+Expected device behavior
+- Lumi stays open if the local 0.6B Fast Brain worker dies or times out.
+- Listening continues even when music is active or another assistant owns Android assistant focus.
+- Lumi can route around a quarantined Fast Brain and retry recovery after a short safety interval.

@@ -1,0 +1,24 @@
+{
+  "phase": 6,
+  "name": "trusted-build-package-relay",
+  "version": 1,
+  "transport": {
+    "scheme": "https",
+    "host_policy": "exact-owner-enrolled-host",
+    "default_port_only": true,
+    "redirects": false
+  },
+  "artifact": {
+    "type": "signed-lumi-core-apk",
+    "sha256_required": true,
+    "guardian_package_signature_verification": true,
+    "forward_version_required": true,
+    "max_bytes_inherited_from_guardian_installer": true
+  },
+  "transaction_binding": {
+    "queued_guardian_request_required": true,
+    "eligible_types": ["runtime_tuning", "content_update", "core_update"]
+  },
+  "authority": "guardian",
+  "certification": "phase4-post-change-certification"
+}

@@ -1,0 +1,15 @@
+LUMI CODE 280 — VOICE SESSION RECOVERY
+
+Purpose: repair the on-device failure where Lumi can recognize one turn, then leaves the microphone indicator active without producing a transcript, while spoken TTS replies remain silent.
+
+Repairs:
+- A SpeechRecognizer session now remains logically active between onEndOfSpeech and onResults/onError. This prevents overlapping startListening calls while Android is still finalizing a result.
+- Before TTS output, the recognizer is cancelled, destroyed, and cleared instead of merely cancelled. A fresh recognizer is created after the TTS echo guard.
+- Runtime health now detects a recognizer callback stall longer than 18 seconds and rebuilds the recognizer automatically.
+- TTS initialization is explicitly tracked and diagnosed.
+- Failed TTS initialization, missing language data, and speak() ERROR returns are logged and cause a safe TTS reinitialization.
+- Natural voice selection now more strongly favors local voices when preferLocal is enabled, reducing silent failures from unavailable network voices.
+- Speech/TTS repair never touches Lumi memories, preferences, model files, Guardian identity, or signing identity.
+
+Version: 4.0.33-voice-session-recovery-r1
+versionCode: 280

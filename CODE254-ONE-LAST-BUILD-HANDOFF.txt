@@ -1,0 +1,18 @@
+LUMI CODE254 AI CORE REPAIR — ONE LAST BUILD HANDOFF
+
+THIS ZIP GOES TO APK FACTORY, NOT LUMI UPDATE CENTER.
+
+Purpose:
+- Compile and sign Lumi Code254 using the existing Lumi signing identity.
+- Code254 removes the retired prototype AI endpoint.
+- Code254 keeps local Fast Brain fallback.
+- Code254 prompts for secure OpenAI configuration when no key is stored.
+- Code254 routes configured substantive conversation through the OpenAI Responses client.
+
+After APK Factory succeeds:
+1. Install the returned Lumi Code254 APK over Code253.
+2. Open Lumi and allow Guardian to verify/certify it.
+3. Configure OpenAI inside Lumi if prompted.
+4. Ask: "How's your AI?"
+
+No API key is embedded in this source package.

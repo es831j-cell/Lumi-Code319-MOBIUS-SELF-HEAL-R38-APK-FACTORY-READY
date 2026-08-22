@@ -1,0 +1,24 @@
+LUMI CODE 247 — FAST BRAIN CERTIFICATION PROBE FIX
+
+Purpose
+- Guardian certification now performs a real local Fast Brain instruction-following probe.
+- The stale fast_brain_quarantine_until and prompt-mismatch status are cleared ONLY when that probe succeeds.
+- Ordinary health checks remain read-only and cannot silently clear faults.
+- Guardian runs the active certification probe on a background thread so the UI does not block while the local model answers.
+
+Probe contract
+- Production-like Lumi identity/instruction system prompt.
+- User prompt requests exactly LUMI_READY.
+- Success requires the normalized response to be exactly lumi_ready.
+- Failure/timeout preserves quarantine and adds the probe failure to Guardian certification output.
+
+Guardian companion
+- Embedded Guardian is bumped to code 2 (1.1-certification).
+- Lumi detects an installed trusted Guardian code 1 and explicitly prompts to upgrade it.
+
+After installing code 247
+1. Open Lumi once so the bootstrap heartbeat completes.
+2. Open Lumi Guardian.
+3. Tap Run Lumi certification.
+4. Wait for the result dialog.
+5. If passed, Guardian should report All Strong Bootstrap certification checks passed for Lumi code 247.

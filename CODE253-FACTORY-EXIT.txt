@@ -1,0 +1,22 @@
+LUMI CODE253 FACTORY EXIT
+
+Goal:
+Make this the last APK Factory-installed Lumi build required for routine development.
+
+Adds:
+- Guardian 1.3 Factory Exit companion.
+- Update Center shows explicit APK FACTORY EXIT STATUS.
+- Readiness checks: Guardian installed, trusted signature, current Guardian version,
+  Android install-source permission, and Guardian certification.
+- Core update ZIPs are handed from Lumi to Guardian after Lumi verification.
+- Guardian creates a protected recovery checkpoint, independently verifies the signed newer Lumi APK,
+  installs through Android PackageInstaller, relaunches Lumi, and marks post-install certification pending.
+- APK Factory remains the catastrophic fallback only.
+
+Android may still require a normal package-install confirmation. That is an OS security boundary,
+not a return to APK Factory.
+
+Workflow collision fix:
+- The source-owned Code253 workflow is manual-dispatch only.
+- APK Factory 2.6.1 remains the only workflow that auto-runs for the factory build.
+- This prevents a second commit-triggered Lumi workflow from queuing beside APK Factory's tracked run.

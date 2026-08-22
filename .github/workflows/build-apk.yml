@@ -1,0 +1,230 @@
+name: Build Lumi Phase 6 Trusted Build Package Relay
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lumi-1-0-full-launch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Wait for APK Factory upload to settle
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          API="https://api.github.com/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_REF_NAME}"
+          last_sha=""
+          stable_checks=0
+          echo "Waiting until APK Factory stops committing files..."
+          for attempt in $(seq 1 42); do
+            sha=$(curl -fsSL \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$API" | python3 -c 'import json,sys; print(json.load(sys.stdin)["sha"])')
+            echo "Branch head: $sha"
+            if [[ -n "$last_sha" && "$sha" == "$last_sha" ]]; then
+              stable_checks=$((stable_checks+1))
+            else
+              stable_checks=0
+              last_sha="$sha"
+            fi
+            if (( stable_checks >= 6 )); then
+              echo "Repository has been stable for at least 60 seconds. Continuing."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::APK Factory upload did not settle within the expected window."
+          exit 1
+
+      - name: Checkout complete Lumi 1.0 source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 1
+
+      - name: Confirm Lumi 1.0 upload is complete
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f zzzz-LUMI-BUILD-READY.txt
+          test -f app/build.gradle
+          test -f app/src/main/AndroidManifest.xml
+          test -f guardian/build.gradle
+          test -f guardian/src/main/AndroidManifest.xml
+          test -f build.gradle
+          test -f settings.gradle
+          test -f app/lumi-prototype-debug.jks
+          test -f app/keystore.properties
+          echo "Complete Lumi 1.0 upload detected."
+
+      - name: Verify source integrity manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f SOURCE-SHA256SUMS.txt
+          sha256sum -c SOURCE-SHA256SUMS.txt
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK 35
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Verify Lumi 1.0 source and signing identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f app/build.gradle
+          test -f guardian/build.gradle
+          test -f app/lumi-prototype-debug.jks
+          test -f app/keystore.properties
+          grep -q "versionCode 317" app/build.gradle
+          grep -q "versionName '4.0.70-mobius-vsync-driver-r36'" app/build.gradle
+          grep -q "applicationId 'com.distressedelk.lumi.guardian'" guardian/build.gradle
+          STORE_FILE=$(awk -F= '$1=="storeFile"{print substr($0,index($0,"=")+1)}' app/keystore.properties)
+          STORE_PASS=$(awk -F= '$1=="storePassword"{print substr($0,index($0,"=")+1)}' app/keystore.properties)
+          KEY_ALIAS=$(awk -F= '$1=="keyAlias"{print substr($0,index($0,"=")+1)}' app/keystore.properties)
+          FP=$(keytool -list -v -keystore "app/$STORE_FILE" -storepass "$STORE_PASS" -alias "$KEY_ALIAS" | awk '/SHA256:/{gsub(":","",$2); print toupper($2); exit}')
+          test "$FP" = "0AD00784E2D593A469CB445D2CC1AFE94E31663768F96470A38144E84EFE8AD2"
+          echo "Trusted Lumi certificate fingerprint verified."
+
+      - name: Build Guardian release APK
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle --no-daemon --warning-mode all :guardian:assembleRelease 2>&1 | tee guardian-build.log
+
+      - name: Embed Guardian into Lumi
+        shell: bash
+        run: |
+          set -euo pipefail
+          GUARDIAN_APK=$(find guardian/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          test -n "$GUARDIAN_APK"
+          mkdir -p app/src/main/res/raw
+          cp "$GUARDIAN_APK" app/src/main/res/raw/lumi_guardian.apk
+          test $(stat -c%s app/src/main/res/raw/lumi_guardian.apk) -gt 4096
+          echo "Embedded Guardian: $GUARDIAN_APK"
+
+      - name: Build Lumi Code 317 Mobius Vsync Driver R36 release APK
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle --no-daemon --warning-mode all :app:assembleRelease 2>&1 | tee lumi-build.log
+
+      - name: Verify APK signatures and identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          LUMI_APK=$(find app/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          GUARDIAN_APK=$(find guardian/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          test -n "$LUMI_APK"; test -n "$GUARDIAN_APK"
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$LUMI_APK" | tee lumi-signature.txt
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs "$GUARDIAN_APK" | tee guardian-signature.txt
+          grep -qi "0ad00784e2d593a469cb445d2cc1afe94e31663768f96470a38144e84efe8ad2" lumi-signature.txt
+          grep -qi "0ad00784e2d593a469cb445d2cc1afe94e31663768f96470a38144e84efe8ad2" guardian-signature.txt
+          "$BUILD_TOOLS/aapt" dump badging "$LUMI_APK" | tee lumi-badging.txt
+          "$BUILD_TOOLS/aapt" dump badging "$GUARDIAN_APK" | tee guardian-badging.txt
+          grep -q "package: name='com.distressedelk.lumi' versionCode='317'" lumi-badging.txt
+          grep -q "package: name='com.distressedelk.lumi.guardian' versionCode='12'" guardian-badging.txt
+          unzip -p "$LUMI_APK" res/raw/lumi_guardian.apk > embedded-guardian.apk
+          test $(stat -c%s embedded-guardian.apk) -gt 4096
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs embedded-guardian.apk | tee embedded-guardian-signature.txt
+          "$BUILD_TOOLS/aapt" dump badging embedded-guardian.apk | tee embedded-guardian-badging.txt
+          grep -q "package: name='com.distressedelk.lumi.guardian' versionCode='12'" embedded-guardian-badging.txt
+          grep -qi "0ad00784e2d593a469cb445d2cc1afe94e31663768f96470a38144e84efe8ad2" embedded-guardian-signature.txt
+          cmp -s "$GUARDIAN_APK" embedded-guardian.apk
+          echo "Embedded Guardian verified byte-for-byte inside Lumi APK."
+
+      - name: Create certification bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p certification
+          LUMI_APK=$(find app/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          GUARDIAN_APK=$(find guardian/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          cp "$LUMI_APK" certification/Lumi-Code317-Mobius-Vsync-Driver-R36.apk
+          cp "$GUARDIAN_APK" certification/Lumi-Guardian-v1.8-Code9.apk
+          cp lumi-signature.txt guardian-signature.txt lumi-badging.txt guardian-badging.txt embedded-guardian-signature.txt embedded-guardian-badging.txt certification/
+          (cd certification && sha256sum * > SHA256SUMS.txt)
+          cat > certification/INSTALL-ORDER.txt <<'TXT'
+          1. Install Lumi-Code317-Mobius-Vsync-Driver-R36.apk through APK Factory or use the in-app core update after Guardian validation.
+          2. Launch Lumi. Lumi will guide installation of the embedded Guardian companion.
+          3. Keep APK Factory installed as catastrophic fallback.
+          4. Do not declare APK Factory retired from routine use until Guardian installs a newer Lumi core and passes recovery testing.
+          TXT
+
+      - name: Create Lumi in-app core update ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          LUMI_APK=$(find app/build/outputs/apk/release -type f -name '*.apk' | head -1)
+          test -n "$LUMI_APK"
+          mkdir -p inapp-update/payload
+          cp "$LUMI_APK" inapp-update/payload/Lumi-Code317-Mobius-Vsync-Driver-R36.apk
+          APK_SHA=$(sha256sum inapp-update/payload/Lumi-Code317-Mobius-Vsync-Driver-R36.apk | awk '{print $1}')
+          cat > inapp-update/lumi-update.json <<EOF
+          {
+            "formatVersion": 1,
+            "updateId": "code317-mobius-vsync-driver-r36",
+            "name": "Lumi Code 317 Mobius Vsync Driver R36",
+            "version": "4.0.70-mobius-vsync-driver-r36",
+            "type": "core",
+            "minAppVersionCode": 316,
+            "maxAppVersionCode": 316,
+            "releaseNotes": "Repairs frozen Möbius motion with an explicit display-vsync frame driver, real GPU frame requests, lifecycle resume/pause integration, and animation telemetry for driver ticks, rendered frames, FPS, frame age, phase, and visual state. Preserves the welded strip geometry, seam-safe deformation, neon glass, alien runes, Code316 identity hierarchy, voice stability, and Guardian bridge.",
+            "files": [
+              {
+                "path": "payload/Lumi-Code317-Mobius-Vsync-Driver-R36.apk",
+                "sha256": "${APK_SHA}"
+              }
+            ],
+            "apk": {
+              "path": "payload/Lumi-Code317-Mobius-Vsync-Driver-R36.apk"
+            }
+          }
+          EOF
+          (cd inapp-update && zip -r ../Lumi-Code317-Mobius-Vsync-Driver-R36-INAPP.zip lumi-update.json payload)
+          unzip -l Lumi-Code317-Mobius-Vsync-Driver-R36-INAPP.zip
+          cp Lumi-Code317-Mobius-Vsync-Driver-R36-INAPP.zip certification/
+
+      - name: Upload Lumi 1.0 launch bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lumi-Code317-Mobius-Vsync-Driver-R36
+          path: certification/*
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lumi-1-0-build-logs
+          path: |
+            guardian-build.log
+            lumi-build.log
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,0 +1,15 @@
+LUMI CODE 311 — CONVERSATION / VOICE PROFILE R30
+
+Merged directly into Lumi Code 310. This is not a separate app.
+
+- Persistent Stop Listening latch on Home and Talk.
+- Post-TTS mic restart obeys the latch.
+- 400 ms reply echo guard.
+- Same recognizer engine gets one retry before switching.
+- Two consecutive audio/no-result sessions required for engine switch.
+- Successful engine remains preferred.
+- Partial transcript salvage preserved.
+- Emoji/pictograph/formatting cleanup before TTS.
+- "Introduce yourself" / "learn my voice" / "set up my voice" opens Lumi voice enrollment.
+- Longer five-phrase voice reference capture.
+- Existing SpeakerVerifier remains a soft personalization signal, not a security biometric.

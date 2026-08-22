@@ -1,0 +1,26 @@
+LUMI CODE 282 — VOICE CONTINUITY + ASSISTANT AUDIO FOCUS
+
+Goal
+- Keep Lumi audibly speaking on every turn, not only the first response.
+- Shorten the handoff from TTS completion back to listening.
+- Request assistant-style Android audio focus so vehicle/Bluetooth systems can duck competing audio during an active Lumi conversation.
+- Preserve Code281 structured diagnostics and add explicit audio-focus/TTS submission tracing.
+
+Changes
+1. Reply echo guard reduced from 220 ms to 95 ms; cue guard reduced from 140 ms to 80 ms.
+2. Silence re-listen backoff reduced from 4.5 s base / 60 s max to 0.9 s base / 7 s max.
+3. TTS now uses AudioAttributes USAGE_ASSISTANT + CONTENT_TYPE_SPEECH.
+4. Conversation mode requests AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE and holds it across the live conversation session.
+5. Audio focus is reacquired before listening and before spoken replies if Android revokes it.
+6. Audio focus is released when conversation mode stops.
+7. Structured trace now records audio-focus grant/loss/release plus TTS submit status and audio-device snapshot.
+
+Acceptance test
+- Start Lumi conversation mode in the vehicle.
+- Ask 10 short questions back-to-back.
+- Lumi must audibly speak all 10 replies and return to listening promptly after each reply.
+- Vehicle audio should duck/pause while the Lumi conversation is active if the head unit honors Android audio focus.
+- Export diagnostics immediately if any reply is silent or any handoff exceeds roughly 2 seconds.
+
+Important
+Vehicle behavior is ultimately controlled by Android + the vehicle head unit. This build requests assistant-grade audio focus but cannot force a head unit that ignores that request to behave exactly like the system default assistant.

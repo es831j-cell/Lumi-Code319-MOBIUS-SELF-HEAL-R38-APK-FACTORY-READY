@@ -1,0 +1,8 @@
+Lumi Code265 — Speech Loop + Fast Brain Repair
+
+1. SpeechRecognizer silence no longer restarts every ~320 ms.
+2. Consecutive silence uses exponential relisten backoff: 4.5s, 9s, 18s, 36s, then 60s max.
+3. Speech diagnostics record silence streak and next-listen delay.
+4. Prompt-quality mismatch no longer quarantines the Fast Brain.
+5. Legacy prompt-mismatch quarantine is cleared once on Code265 startup.
+6. Native engine errors/crashes still retain quarantine protection.

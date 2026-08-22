@@ -1,0 +1,21 @@
+LUMI CODE 305 — GUARDIAN PING/ECHO R24
+
+Purpose
+- Repair false BRIDGE_NOT_READY results observed on Code 303 / Guardian 9.
+
+Root cause addressed
+- Guardian used Lumi's full health/certification provider response as the transport handshake.
+- A health-path exception or non-transport issue could therefore make a reachable bridge look disconnected.
+
+Changes
+- Adds signature-protected Lumi bridge_ping endpoint.
+- Guardian 1.9 / code 10 sends a transaction ID and requires the exact echo back.
+- Verifies Lumi package identity independently of certification state.
+- Runs health/certification only after the transport ping succeeds and does not use certification as the connectivity gate.
+- Returns explicit transportPingOk, transactionEchoOk, lumiIdentityOk, maintenanceHostReady, observed Lumi version, timing, and error diagnostics.
+- Lumi now requires Guardian code 10 for the maintenance bridge.
+- Preserves Code 304 real-time 3D Mobius renderer and Code 303 home listening controls.
+
+Expected diagnostic
+MAINTENANCE_TOOL START ... check_maintenance_bridge
+MAINTENANCE_TOOL COMPLETE ... ok=true state=BRIDGE_CONNECTED guardian=10

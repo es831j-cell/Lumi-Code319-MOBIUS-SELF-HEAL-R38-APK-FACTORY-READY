@@ -1,0 +1,15 @@
+LUMI CODE 268 - EXPLICIT WEB IMAGE SEARCH
+
+Adds a dedicated online picture-search path while preserving local-first conversation.
+
+Behavior:
+- Requests such as "find pictures of...", "show me photos of...", or "search for images of..." explicitly trigger online image search.
+- Search uses Wikimedia Commons over HTTPS without requiring another API key.
+- Lumi displays up to 8 image thumbnails inside the app.
+- Tapping a thumbnail opens the full image URL.
+- Ordinary conversation does not invoke image search and remains local-first.
+- Diagnostics record the image-search route/provider and failures.
+
+Safety/privacy:
+- Network access occurs only after an explicit picture/image request.
+- No background autonomous image browsing is introduced.

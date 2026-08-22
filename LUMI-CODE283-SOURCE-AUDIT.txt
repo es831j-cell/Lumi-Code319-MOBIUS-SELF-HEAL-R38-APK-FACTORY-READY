@@ -1,0 +1,15 @@
+LUMI CODE 283 SOURCE AUDIT — READY FOR APK FACTORY
+Date: 2026-08-21
+Candidate: 4.0.36-fast-brain-recovery-r2 / versionCode 283
+
+PASS — Source derived from installed Code282 build package.
+PASS — Fast Brain recovery retains strict exact READY acceptance.
+PASS — Recovery now performs one controlled retry after a non-READY visible completion.
+PASS — Native load/inference exceptions still preserve quarantine.
+PASS — Recovery failure diagnostics now include a sanitized output preview.
+PASS — app/build.gradle bumped to versionCode 283 / 4.0.36-fast-brain-recovery-r2.
+PASS — GitHub workflow package/version/artifact assertions updated to Code283.
+PASS — SOURCE-SHA256SUMS regenerated and validated.
+
+RUNTIME GATE
+APK Factory/GitHub must still compile and sign the APK. On-device validation should confirm startup recovery clears quarantine only after READY and local routing resumes.

@@ -1,0 +1,21 @@
+LUMI CODE 312 — MÖBIUS SEAMLESS MOTION R31
+
+Base:
+- Lumi Code 311 CONVERSATION-VOICE-PROFILE-R30.
+- Same Lumi application/package, Guardian bridge, voice pipeline, routing, and UI.
+
+Möbius renderer repair:
+1. Rebuilt mesh with an explicit u=2π closure ring.
+2. Removed special seam-index flipping from the draw mesh.
+3. Shader U now runs continuously from 0 through 1 across the last surface segment,
+   preventing the 1→0 interpolation smear that appeared as a bright seam.
+4. Removed normal-vector displacement from animation.
+   A Möbius strip is non-orientable, so normal displacement can create a moving crack.
+5. Added smooth whole-surface periodic breathing/deformation using integer-cycle waves.
+6. Made glass lighting two-sided with abs(dot()) so the unavoidable normal orientation
+   reversal does not create a visible lighting discontinuity.
+7. Preserved the existing state-driven motion for Ready, Listening, Thinking, Speaking,
+   and Paused, but reduced over-flexing.
+8. Diagnostics now identify the seam-safe closure/deformation renderer.
+
+Voice/conversation changes from Code 311 are preserved unchanged.

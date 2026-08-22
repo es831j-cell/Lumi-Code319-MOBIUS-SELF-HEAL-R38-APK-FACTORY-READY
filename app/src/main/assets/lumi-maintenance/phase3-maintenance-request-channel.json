@@ -1,0 +1,18 @@
+{
+  "schema": "lumi-maintenance-request-channel-v1",
+  "phase": 3,
+  "transport": "signature-protected Guardian ContentProvider",
+  "allowedChangeTypes": [
+    "diagnose",
+    "runtime_tuning",
+    "content_update",
+    "core_update",
+    "rollback"
+  ],
+  "maxRequestChars": 500,
+  "freshnessWindowMs": 120000,
+  "replayProtection": "single-use nonce recorded by Guardian",
+  "integrity": "SHA-256 envelope hash; caller authentication is Android signature permission",
+  "executionBoundary": "queue only; no shell, arbitrary file access, permission escalation, or install by request submission",
+  "approval": "write tools still require owner authorization before Lumi submits a request"
+}

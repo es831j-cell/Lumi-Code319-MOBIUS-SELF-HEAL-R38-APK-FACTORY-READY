@@ -1,0 +1,19 @@
+LUMI CODE272 — WAKE PHRASE KEYBOARD ESCAPE
+
+Problem fixed:
+- Code271 correctly paused normal voice turns while typing, but it also tore down the speech recognizer.
+- As a result, saying the wake phrase could not return Lumi to voice mode.
+
+Behavior now:
+- Keyboard mode still suppresses ambient and ordinary speech as conversation turns.
+- A lightweight wake-only recognizer remains armed while the keyboard is active.
+- Saying "Lumi", "Hey Lumi", "OK Lumi", or "Okay Lumi" immediately releases keyboard ownership and returns to voice listening.
+- Saying "Lumi, <request>" exits typing mode and routes the request immediately.
+- Ambient speech while typing remains ignored and only appears in diagnostics as ambient speech.
+
+Validation:
+1. Open Talk and tap the composer.
+2. Confirm keyboard appears and status says wake phrase armed.
+3. Speak background conversation without saying Lumi. No user turn should be created.
+4. Say "Lumi". Keyboard should release and voice listening should resume.
+5. Re-enter typing mode, then say "Lumi, how are you?" The keyboard should release and the request should be handled.

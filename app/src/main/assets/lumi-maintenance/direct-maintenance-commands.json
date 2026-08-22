@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "skillId": "direct-maintenance-commands-v1",
+  "commands": [
+    {"id":"get_system_status","scope":"diagnostics.read","mutating":false},
+    {"id":"get_diagnostics","scope":"diagnostics.read","mutating":false},
+    {"id":"get_installed_manifest","scope":"manifest.read","mutating":false},
+    {"id":"create_update_session","scope":"updates.stage","mutating":true},
+    {"id":"stage_update_package","scope":"updates.stage","mutating":true},
+    {"id":"run_update_tests","scope":"updates.test","mutating":true},
+    {"id":"request_guardian_install","scope":"updates.install_request","mutating":true},
+    {"id":"get_update_result","scope":"diagnostics.read","mutating":false},
+    {"id":"request_rollback","scope":"updates.rollback","mutating":true}
+  ],
+  "forbidden": ["remote_shell", "arbitrary_command", "guardian_bypass", "silent_permission_escalation"]
+}

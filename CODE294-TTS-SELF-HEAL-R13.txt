@@ -1,0 +1,22 @@
+LUMI CODE 294 — TTS SELF-HEAL R13
+
+Built from Code 293.
+
+Voice-output repair:
+- Adds a TTS start watchdog. If Android accepts a speak request but never starts it,
+  Lumi rebuilds the TTS engine and retries the sentence once.
+- Adds a TTS completion watchdog. If speech starts but never reports completion,
+  Lumi rebuilds the engine and retries once.
+- Preserves a reply when TTS is temporarily unavailable during initialization instead
+  of silently dropping the spoken response.
+- On exhausted retry, Lumi restores the listening loop rather than remaining wedged.
+- Adds diagnostic counters and last watchdog-recovery reason.
+
+Retained:
+- direct device-clock time
+- dedicated online weather
+- foreground Fast Brain isolation
+- faster ordinary OpenAI path
+- on-device soft speaker-confidence check
+- Listen / Stop listening controls
+- Guardian / internal-update foundation

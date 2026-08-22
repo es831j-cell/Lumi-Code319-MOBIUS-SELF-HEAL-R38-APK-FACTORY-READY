@@ -1,0 +1,33 @@
+LUMI PHASE 6 — TRUSTED BUILD & PACKAGE RELAY
+Version: Lumi 4.0.32 / code 279 • Guardian 1.7 / code 8
+
+PURPOSE
+Phase 6 removes APK Factory from the normal hand-carry path by giving Guardian a bounded receiver for externally built, already-signed Lumi core APKs.
+
+IMPLEMENTED IN SOURCE
+• Guardian can enroll one exact HTTPS build-relay hostname after current owner authorization through Lumi's guarded maintenance tools.
+• A relay artifact is accepted only for the currently queued Guardian maintenance request. Transaction IDs cannot be swapped between unrelated requests.
+• The relay URL must use HTTPS, the hostname must exactly equal the enrolled relay host, user-info is forbidden, and non-default HTTPS ports are rejected.
+• Every relay artifact requires an exact caller-supplied SHA-256 digest. Guardian streams the APK into private storage with a hard size cap and independently verifies the digest.
+• After transport integrity succeeds, Guardian independently verifies the APK package/signing identity and forward version using the existing GuardianVerifier. The relay never becomes a signing authority.
+• Guardian creates a recovery checkpoint before installation, submits the verified APK through the existing Guardian installer, records the request/build hash in the technical ledger, and leaves Phase 4 post-change certification authoritative for the final PASS/FAIL state.
+• Lumi exposes two bounded maintenance tools: configure_trusted_build_relay and install_trusted_relay_build. Both remain behind MaintenanceAuthorization and the signature-protected Lumi↔Guardian provider boundary.
+• Guardian now has INTERNET permission because Guardian, not Lumi/OpenAI, performs the trusted artifact download and verification.
+
+SECURITY BOUNDARY
+The relay is a transport/build-output source only. It cannot install arbitrary apps, bypass Guardian, run shell commands, change permissions, or declare its own build trustworthy. An APK still has to match Lumi's installed signing identity and satisfy Guardian's version/package checks.
+
+WHAT PHASE 6 DOES NOT CLAIM
+• This Android source package does not create or host the external build server itself.
+• A real relay endpoint still needs to be paired/enrolled and must publish the signed APK plus its SHA-256 after the trusted build system compiles it.
+• Android may still require user-visible install approval depending on platform/policy.
+• APK Factory should remain installed as catastrophic backup until one complete request → external build → relay download → Guardian install → Phase 4 certification cycle passes on the real phone.
+
+ACCEPTANCE TEST
+1. Build/install Lumi 279 and Guardian 1.7 using the existing trusted path one final time.
+2. In conversation, queue a harmless core maintenance request and note the Guardian request ID.
+3. Explicitly enroll the HTTPS hostname of the trusted build relay.
+4. Have the external build system produce a forward-version Lumi APK signed with the retained Lumi signing identity and publish its exact SHA-256.
+5. Tell Lumi to install that relay build, supplying the queued request ID, HTTPS URL, and SHA-256.
+6. Confirm Guardian reports ARTIFACT_HASH_VERIFIED then INSTALL_SUBMITTED, Android completes the installation, and Phase 4 certification reaches CERTIFIED.
+7. Repeat once without APK Factory. Only then classify APK Factory as emergency backup rather than normal workflow.

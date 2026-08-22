@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "updateId": "example-content-001",
+  "name": "Lumi Content Update",
+  "version": "1",
+  "type": "content",
+  "minAppVersionCode": 223,
+  "releaseNotes": "Example local ZIP update package.",
+  "preferences": {
+    "reply_style": "natural"
+  },
+  "files": []
+}

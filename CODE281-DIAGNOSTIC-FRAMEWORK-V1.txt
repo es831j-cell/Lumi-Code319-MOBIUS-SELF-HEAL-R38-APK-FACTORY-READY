@@ -1,0 +1,19 @@
+LUMI CODE 281 — DIAGNOSTIC FRAMEWORK V1
+
+Purpose: make conversation failures observable stage-by-stage instead of relying on a single giant event log.
+
+Menu: Settings -> Developer Diagnostics & Health
+
+Adds:
+- System Health & Wiring view showing microphone permission, Android SpeechRecognizer availability/service, default voice-interaction/assistant settings, audio mode and communication device, Fast Brain readiness/load/busy/quarantine state, TTS engine/readiness, network, and last routing state.
+- Structured Conversation Trace with timestamp, sequence, turn, stage, status, elapsed time, and concise detail.
+- Automatic trace hooks across STT, routing, local/online execution, faults, recovery, response readiness, TTS, and return-to-listening events already emitted by the runtime.
+- Record Diagnostic Session toggle to isolate a reproduction window.
+- Non-invasive Component Tests for microphone permission, recognition availability, TTS initialization, Fast Brain model/quarantine/busy state, network, recognizer service, and audio route.
+- Full diagnostic export now includes wiring snapshot, component tests, structured conversation trace, self-test, and legacy event logs.
+- Existing Conversation Diagnostics links into the new framework.
+
+This build does not claim to solve Fast Brain quarantine or Android vehicle audio-focus behavior. It instruments those boundaries so the next failure identifies the exact subsystem and handoff that broke.
+
+Version: 4.0.34-diagnostic-framework-v1
+versionCode: 281

@@ -1,0 +1,30 @@
+LUMI CODE 282 SOURCE AUDIT — GREEN FOR BUILD/DEVICE VALIDATION
+
+Candidate: 4.0.35-voice-continuity-r1 / versionCode 282
+Base: Lumi Code 281 Diagnostic Framework v1
+
+SOURCE CHECKS
+PASS — package identity remains com.distressedelk.lumi.
+PASS — versionCode bumped to 282.
+PASS — versionName identifies Voice Continuity r1.
+PASS — Code281 structured diagnostics remain present.
+PASS — Android TTS is configured with USAGE_ASSISTANT + CONTENT_TYPE_SPEECH.
+PASS — assistant-style audio focus request is implemented for active conversation mode.
+PASS — audio focus is reacquired before listening/reply and released when conversation mode stops.
+PASS — TTS submit status and audio snapshots are added to structured traces.
+PASS — reply echo guard reduced to 95 ms and cue guard to 80 ms.
+PASS — silence re-listen base reduced to 900 ms with 7 s cap.
+PASS — workflow version/package assertions updated to Code282.
+PASS — XML and YAML parse checks pass.
+PASS — source checksum inventory regenerated after patching.
+PASS — ZIP integrity check passes.
+
+RUNTIME GATES
+1. APK Factory/GitHub must compile the release APK successfully.
+2. Install Code282 over Code281 on the phone.
+3. In vehicle, start a Lumi conversation and ask 10 back-to-back questions.
+4. Confirm every reply is audible and Lumi returns to listening promptly.
+5. Confirm vehicle/head unit ducks or pauses competing audio while conversation mode is active, if the head unit honors Android audio focus.
+6. Export Code282 diagnostics immediately if any reply is silent or any handoff is abnormally delayed.
+
+This audit certifies source/package readiness only. It does not claim on-device runtime certification.

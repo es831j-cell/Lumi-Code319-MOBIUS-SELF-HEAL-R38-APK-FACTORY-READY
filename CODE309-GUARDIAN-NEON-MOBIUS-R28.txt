@@ -1,0 +1,9 @@
+LUMI CODE 309 — GUARDIAN + NEON MOBIUS R28
+
+- Removes obsolete manifest-level Guardian provider permission gate.
+- GuardianControlProvider now authenticates Lumi inside the provider by package + same-signature verification.
+- Guardian version 12 (2.1-provider-auth-fix); Lumi requires Guardian 12.
+- Rebuilds Möbius topology as one continuous half-twisted surface with reversed seam closure.
+- Neon glass shader: violet/blue/cyan with restrained warm-gold accents.
+- Visible procedural alien runes and circuit traces are generated on the live 3D surface.
+- Existing Code 308 speech failover and bridge telemetry preserved.

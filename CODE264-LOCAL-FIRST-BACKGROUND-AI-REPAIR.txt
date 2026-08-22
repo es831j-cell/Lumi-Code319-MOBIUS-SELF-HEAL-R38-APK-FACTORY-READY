@@ -1,0 +1,16 @@
+LUMI CODE264 — LOCAL-FIRST BACKGROUND AI REPAIR
+
+VersionCode: 264
+VersionName: 4.0.17-local-first-background-ai-r1
+
+Purpose
+- Keep normal conversation on the on-phone Fast Brain.
+- Treat online provider health as background availability only, not as a foreground routing trigger.
+- Escalate to OpenAI/remote only for explicit stronger-brain requests or clearly heavy work.
+- Prevent overlapping AI health checks and bound automatic retries to three attempts (15s, 60s, 300s), then pause until a later stale/manual refresh.
+- A failed foreground OpenAI request records the failure but does not start a retry storm.
+- Integration Center separates CONFIGURED, AVAILABLE NOW, and LAST USED FOR A REPLY.
+- Each routed reply records ai_last_used_provider, ai_last_used_at, and ai_last_route_reason for diagnostics.
+- Foreground/resume health refresh is throttled to a five-minute stale window.
+
+Guardian remains unchanged.

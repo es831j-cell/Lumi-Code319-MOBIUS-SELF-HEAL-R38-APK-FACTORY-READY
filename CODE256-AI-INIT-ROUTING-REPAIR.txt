@@ -1,0 +1,22 @@
+LUMI CODE256 AI INIT + ROUTING REPAIR
+
+WHY THIS BUILD EXISTS
+Code255 passed Guardian/Strong Bootstrap, but an AI-status speech route still used a Java regex with \b inside a string literal. In Java that becomes a backspace character, so natural phrases such as “how is your AI connection” could miss the direct status route and fall into the local Fast Brain. That local model could then describe stale prototype state instead of the real provider state.
+
+REPAIRS
+- Replaces the fragile AI-status regex with explicit natural-language intent matching.
+- AI status questions now read AiConnectionManager state directly and refresh the live check.
+- If OpenAI is not configured, Lumi opens the OpenAI setup dialog automatically.
+- A recovered secure OpenAI credential is promoted to the active provider at startup.
+- Safe local fallback cannot invent AI connection state; it reports AiConnectionManager.spokenSummary().
+- Keeps the retired 192.168.1.100:11434 prototype endpoint disabled.
+- Corrects GitHub certification checks that incorrectly expected Guardian versionCode 255. Guardian 1.3 Factory Exit is versionCode 4.
+- Lumi versionCode bumped to 256 / 4.0.9-ai-init-routing-r2.
+
+EXPECTED PHONE TEST
+1. Install Code256 over Code255.
+2. Open Lumi.
+3. Say: “How is your AI connection?”
+4. If a key exists, Lumi should report OpenAI checking/connected state.
+5. If no key exists, Lumi should say OpenAI is not configured and open Connect OpenAI.
+6. Guardian should remain 1.3 Factory Exit / trusted; run Lumi certification once after install.

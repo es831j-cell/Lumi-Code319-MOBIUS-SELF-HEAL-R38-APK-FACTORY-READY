@@ -1,0 +1,8 @@
+LUMI CODE 307 — BRIDGE STAGE + COMPACT GLYPH R26
+
+- Guardian 2.0 / code 11.
+- Reverse bridge trusts Guardian using Android same-signature verification rather than a pinned certificate hash.
+- Bridge probe reports failedStage: provider call, transaction echo, Lumi identity, maintenance host readiness, or NONE.
+- Möbius reduced to 62% model scale, narrower ribbon, farther camera, and raised composition.
+- Surface pattern replaced by sparse rune-like segmented glyph marks generated on the mesh.
+- Existing code-7 hard recognizer reset retained.

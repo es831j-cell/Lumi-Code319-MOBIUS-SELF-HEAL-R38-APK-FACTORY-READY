@@ -1,0 +1,22 @@
+LUMI CODE258 — AI STATE SYNC REPAIR
+Date: 2026-08-21
+
+Observed runtime symptom:
+- OpenAI connection test reports CONNECTED in Lumi's popup/spoken state.
+- Integration Center card remains visually stuck on an older LOCAL_ONLY / no-credential result.
+
+Root cause repaired:
+- The AI Connection Manager updated SharedPreferences asynchronously, but the already-rendered Integration Center status card was static.
+- Test/recheck could therefore show a fresh popup while leaving stale text on screen.
+
+Code258 changes:
+1. AI Connection Manager now publishes a UI state-change callback every time connection state is written.
+2. Integration Center updates its AI status card in place on CHECKING, CONNECTED, LOCAL_ONLY, AUTH_REQUIRED, OFFLINE, etc.
+3. Test and Recheck no longer immediately display a stale spoken-summary popup.
+4. OpenAI key save performs immediate secure-store readback verification before claiming success.
+5. Existing local-first fallback, retry logic, encrypted credential storage, and provider routing are preserved.
+
+Expected phone test:
+- Configure OpenAI -> Save and test.
+- Card should immediately show that the credential is stored, then CHECKING, then CONNECTED (or a real auth/network error).
+- No screen reload is required to see the new state.

@@ -1,0 +1,21 @@
+LUMI 1.0 CODE247 — GUARDIAN EMBED FIX r1
+
+Observed on-device failure:
+Guardian setup failed: Embedded Guardian APK is unreadable.
+
+Root cause proven from the APK Factory-produced Lumi APK:
+- res/raw/lumi_guardian.apk inside app-debug.apk was exactly 52 bytes.
+- Those 52 bytes were the source placeholder text:
+  GUARDIAN_APK_PLACEHOLDER_REPLACED_DURING_ROOT_BUILD
+- APK Factory 2.6.1 intentionally injects and runs its own generic `gradle assembleDebug` workflow.
+- The Lumi source-owned release workflow had the Guardian replacement step, but APK Factory did not execute that workflow.
+
+Fix:
+1. app/build.gradle now makes preDebugBuild depend on a real Guardian debug build and embeds it before resources are packaged.
+2. preReleaseBuild does the same for release builds.
+3. The root assembleDebug task builds :app:assembleDebug and removes the standalone Guardian debug APK after Lumi packaging, preventing APK Factory from selecting Guardian as the primary downloaded artifact.
+4. The source-owned release workflow now extracts res/raw/lumi_guardian.apk from the final Lumi APK, validates its signature/package/version, and requires it to match the built Guardian byte-for-byte.
+5. Visible versionName is 4.0.0-lumi-1.0-r1; versionCode remains 247 because Lumi 1.0 is not yet certified/declared launched.
+
+Device gate still required:
+Build this source through APK Factory 2.6.1, install over the current Code247 Lumi, then confirm Guardian setup installs Guardian 1.2 / Code3 and run certification.

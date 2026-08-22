@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "name": "Lumi Live Tools Registry",
+  "version": "4.3-market-alias-safe",
+  "allowedHosts": [
+    "query1.finance.yahoo.com",
+    "query2.finance.yahoo.com",
+    "stooq.com",
+    "wttr.in",
+    "news.google.com",
+    "api.gdeltproject.org",
+    "api.duckduckgo.com",
+    "en.wikipedia.org",
+    "nominatim.openstreetmap.org"
+  ],
+  "tools": [
+    {
+      "id": "stock_quote",
+      "name": "Live market quote with company-name aliases",
+      "enabled": true,
+      "extractor": "ticker",
+      "failureMessage": "I couldn't retrieve a trustworthy live market quote right now, so I won't guess.",
+      "patterns": [
+        "(?:what(?:'s| is)?|whats|give me|show me)?\\s*(?:the\\s+)?(?:current\\s+|live\\s+|latest\\s+)?(?:stock\\s+price|share\\s+price|stock\\s+quote|quote)\\s+(?:for\\s+|of\\s+)?\\$?([A-Za-z][A-Za-z0-9.\\-]{0,9})\\b",
+        "(?:what(?:'s| is)?|whats)\\s+\\$?([A-Za-z][A-Za-z0-9.\\-]{0,9})\\s+(?:stock\\s+)?(?:trading\\s+at|at)\\b",
+        "\\$?([A-Za-z][A-Za-z0-9.\\-]{0,9})\\s+(?:stock\\s+)?(?:price|quote)\\b"
+      ],
+      "providers": [
+        {
+          "id": "yahoo-chart-1",
+          "type": "json",
+          "url": "https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval=1m&range=1d",
+          "valuePath": "chart.result.0.meta.regularMarketPrice",
+          "currencyPath": "chart.result.0.meta.currency",
+          "timePath": "chart.result.0.meta.regularMarketTime",
+          "replyTemplate": "{arg} is {money}. Latest live quote retrieved {time}."
+        },
+        {
+          "id": "yahoo-chart-2",
+          "type": "json",
+          "url": "https://query2.finance.yahoo.com/v8/finance/chart/{ticker}?interval=1m&range=1d",
+          "valuePath": "chart.result.0.meta.regularMarketPrice",
+          "currencyPath": "chart.result.0.meta.currency",
+          "timePath": "chart.result.0.meta.regularMarketTime",
+          "replyTemplate": "{arg} is {money}. Latest live quote retrieved {time}."
+        },
+        {
+          "id": "yahoo-chart-daily",
+          "type": "json",
+          "url": "https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval=1d&range=5d",
+          "valuePath": "chart.result.0.meta.regularMarketPrice",
+          "currencyPath": "chart.result.0.meta.currency",
+          "timePath": "chart.result.0.meta.regularMarketTime",
+          "replyTemplate": "{arg} is {money}. Latest market quote retrieved {time}."
+        },
+        {
+          "id": "stooq-us",
+          "type": "csv",
+          "url": "https://stooq.com/q/l/?s={ticker}.us&f=sd2t2ohlcv&h&e=csv",
+          "row": 1,
+          "valueColumn": 6,
+          "dateColumn": 1,
+          "timeColumn": 2,
+          "currency": "USD",
+          "replyTemplate": "{arg} is {money} based on the latest fallback quote I could retrieve ({time})."
+        }
+      ]
+    },
+    {
+      "id": "weather_forecast",
+      "name": "Weather forecast",
+      "enabled": true,
+      "extractor": "raw",
+      "failureMessage": "I couldn't retrieve the forecast for {arg} right now.",
+      "patterns": [
+        "(?:what(?:'s| is)?|whats|give me|show me)?\\s*(?:the\\s+)?(?:weather|forecast)\\s+(?:in|for|at)\\s+(.+?)\\s+tomorrow\\s*[?.!]*$",
+        "(?:what(?:'s| is)?|whats|give me|show me)?\\s*(?:the\\s+)?(?:weather|forecast)\\s+tomorrow\\s+(?:in|for|at)\\s+(.+?)\\s*[?.!]*$",
+        "(?:what(?:'s| is)?|whats)\\s+(?:it\\s+)?(?:going to be like|look like)\\s+tomorrow\\s+(?:in|for|at)\\s+(.+?)\\s*[?.!]*$"
+      ],
+      "providers": [
+        {
+          "id": "wttr-tomorrow",
+          "type": "json",
+          "url": "https://wttr.in/{arg}?format=j1",
+          "valuePath": "weather.1.maxtempF",
+          "statePath": "weather.1.hourly.4.weatherDesc.0.value",
+          "exchangePath": "weather.1.mintempF",
+          "replyTemplate": "Tomorrow in {arg}: high {value}\u00b0F, low {exchange}\u00b0F, with {state}."
+        }
+      ]
+    },
+    {
+      "id": "weather_current",
+      "name": "Current weather",
+      "enabled": true,
+      "extractor": "raw",
+      "failureMessage": "I couldn't retrieve current weather for {arg} right now.",
+      "patterns": [
+        "(?:what(?:'s| is)?|whats|give me|show me)?\\s*(?:the\\s+)?(?:current\\s+)?weather\\s+(?:in|for|at)\\s+(.+?)(?:\\s+today|\\s+right now|\\s+now)?\\s*[?.!]*$",
+        "(?:what(?:'s| is)?|whats)\\s+(?:the\\s+)?(?:temperature|temp)\\s+(?:in|for|at)\\s+(.+?)(?:\\s+today|\\s+right now|\\s+now)?\\s*[?.!]*$"
+      ],
+      "providers": [
+        {
+          "id": "wttr-current",
+          "type": "json",
+          "url": "https://wttr.in/{arg}?format=j1",
+          "valuePath": "current_condition.0.temp_F",
+          "statePath": "current_condition.0.weatherDesc.0.value",
+          "exchangePath": "current_condition.0.FeelsLikeF",
+          "replyTemplate": "Current weather in {arg}: {value}\u00b0F and {state}. Feels like {exchange}\u00b0F."
+        }
+      ]
+    },
+    {
+      "id": "news_topic",
+      "name": "Latest topic news",
+      "enabled": true,
+      "extractor": "raw",
+      "failureMessage": "I couldn't retrieve current news about {arg} right now.",
+      "patterns": [
+        "(?:what(?:'s| is)?|whats)\\s+(?:the\\s+)?(?:latest|current)\\s+(?:news|update)\\s+(?:on|about)\\s+(.+?)\\s*[?.!]*$",
+        "(?:latest|current)\\s+news\\s+(?:on|about)\\s+(.+?)\\s*[?.!]*$",
+        "(?:find|show me|get)\\s+(?:the\\s+)?latest\\s+news\\s+(?:on|about)\\s+(.+?)\\s*[?.!]*$"
+      ],
+      "providers": [
+        {
+          "id": "google-news-rss",
+          "type": "rss",
+          "url": "https://news.google.com/rss/search?q={arg}&hl=en-US&gl=US&ceid=US:en",
+          "maxItems": 3,
+          "replyTemplate": "Latest news I found about {arg}: {value}",
+          "connectTimeoutMs": 8000,
+          "readTimeoutMs": 12000
+        },
+        {
+          "id": "gdelt-doc",
+          "type": "json",
+          "url": "https://api.gdeltproject.org/api/v2/doc/doc?query={arg}&mode=ArtList&maxrecords=5&format=json&sort=HybridRel",
+          "itemsPath": "articles",
+          "itemValuePath": "title",
+          "itemSourcePath": "domain",
+          "itemTimePath": "seendate",
+          "maxItems": 3,
+          "replyTemplate": "Current news results I found about {arg}: {value}",
+          "connectTimeoutMs": 8000,
+          "readTimeoutMs": 13000
+        }
+      ]
+    },
+    {
+      "id": "web_lookup",
+      "name": "Web reference lookup",
+      "enabled": true,
+      "extractor": "raw",
+      "failureMessage": "I couldn't retrieve a reliable web result for {arg} right now.",
+      "patterns": [
+        "(?:search|search the web|look up|lookup)\\s+(?:online\\s+|the web\\s+)?(?:for\\s+)?(.+?)\\s*[?.!]*$",
+        "(?:find|give me)\\s+(?:information|info)\\s+(?:online\\s+|on the web\\s+)?(?:about|on)\\s+(.+?)\\s*[?.!]*$"
+      ],
+      "providers": [
+        {
+          "id": "duckduckgo-abstract",
+          "type": "json",
+          "url": "https://api.duckduckgo.com/?q={arg}&format=json&no_html=1&skip_disambig=1&no_redirect=1",
+          "valuePath": "AbstractText",
+          "statePath": "AbstractSource",
+          "replyTemplate": "{value} Source: {state}."
+        },
+        {
+          "id": "wikipedia-search",
+          "type": "json",
+          "url": "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={arg}&format=json&utf8=1&srlimit=3",
+          "itemsPath": "query.search",
+          "itemValuePath": "title",
+          "maxItems": 3,
+          "replyTemplate": "Relevant web references I found for {arg}: {value}"
+        }
+      ]
+    },
+    {
+      "id": "place_lookup",
+      "name": "Place and address lookup",
+      "enabled": true,
+      "extractor": "raw",
+      "failureMessage": "I couldn't retrieve a reliable place result for {arg} right now.",
+      "patterns": [
+        "(?:where is|where's|wheres)\\s+(.+?)\\s+(?:located|at)\\s*[?.!]*$",
+        "(?:find|look up|lookup)\\s+(?:the\\s+)?(?:address|location)\\s+(?:for|of)\\s+(.+?)\\s*[?.!]*$",
+        "(?:what(?:'s| is)?|whats)\\s+(?:the\\s+)?address\\s+(?:for|of)\\s+(.+?)\\s*[?.!]*$"
+      ],
+      "providers": [
+        {
+          "id": "openstreetmap-nominatim",
+          "type": "json",
+          "url": "https://nominatim.openstreetmap.org/search?q={arg}&format=jsonv2&limit=1&addressdetails=1",
+          "valuePath": "0.display_name",
+          "headers": {
+            "Accept-Language": "en-US,en;q=0.9"
+          },
+          "replyTemplate": "I found {arg} at: {value}."
+        }
+      ]
+    }
+  ]
+}

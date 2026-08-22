@@ -1,0 +1,17 @@
+LUMI CODE 269 — AI STATE TRUTH REPAIR
+
+Purpose
+- Stop provider reachability from being confused with a successful model inference.
+- Preserve local-first fallback behavior.
+- Expose the exact sanitized error from the last real OpenAI inference request.
+
+Changes
+1. AI Connection Manager now tracks independent states for:
+   - credential/configuration
+   - provider reachability/background preflight
+   - last real model inference success/failure
+2. A failed inference no longer overwrites a successful reachability check.
+3. Integration Center summary displays CREDENTIAL, REACHABILITY, and LAST INFERENCE separately.
+4. Failed inference includes the sanitized API error so quota, model, payload, auth, or service faults can be diagnosed directly.
+5. Spoken AI-status answers use the same split-state truth model.
+6. Local brain remains the owner of normal conversation and remains the fallback on online inference failure.

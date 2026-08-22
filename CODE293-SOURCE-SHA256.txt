@@ -1,0 +1,5 @@
+825fba7fcc3e52cc3bfe499e1b87da795be294b3e6d8999f4bedb911db27059d  app/build.gradle
+1122b3dc2f8bddade2fb3ccd2b16c1d6b601bf9844ab7decbf2603809d789269  app/src/main/java/com/distressedelk/lumi/MainActivity.java
+83902bb46b0d2ff2df8603b43b7ca092d20d423683fa32cafc2d5e2248ef8cee  app/src/main/java/com/distressedelk/lumi/OpenAIReasoningClient.java
+6c0bca75246b2e77b2725a8f1256921ce5a72f88bdb983a334e9cf6a73bb788f  app/src/main/java/com/distressedelk/lumi/SpeakerVerifier.java
+4358da4e90af1909ede774004b6d6a83da2c720c3ba98d81e58c59b12b0385af  CODE293-RESPONSIVE-CONVERSATION-SPEAKER-R12.txt

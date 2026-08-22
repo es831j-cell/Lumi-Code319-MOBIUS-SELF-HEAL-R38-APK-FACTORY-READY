@@ -1,0 +1,33 @@
+LUMI PHASE 4 — AUTOMATIC POST-CHANGE DIAGNOSTICS + CERTIFICATION
+Version: Lumi 4.0.30 / code 277 • Guardian 1.5 / code 6
+
+PURPOSE
+Phase 4 closes the maintenance loop after a change. Guardian, not the model or update package,
+owns the pass/fail decision.
+
+IMPLEMENTED IN SOURCE
+• Guardian automatically starts certification after a successful Lumi core install.
+• Certification runs Lumi's signature-protected Strong Bootstrap + real Fast Brain probe.
+• Guardian retries a transient certification failure up to three times with bounded delays.
+• Certification evidence is persisted: pass/fail, timestamp, attempt count, summary, probe result,
+  target version, and reason.
+• Maintenance request state moves to CERTIFIED or CERTIFICATION_FAILED.
+• Guardian status exposes the last certification result and whether core recovery is required.
+• If a new core fails certification, Guardian restores the latest Lumi state checkpoint and marks
+  core_recovery_required. Android does not permit a normal app to silently downgrade another app,
+  so Phase 4 deliberately does NOT claim unattended APK downgrade. Guardian keeps the failure
+  visible and recovery-gated instead of lying about rollback.
+• Manual Guardian certification uses the same centralized certification runner.
+
+TRUST BOUNDARY
+A relay, AI model, ZIP manifest, or APK cannot self-declare success. Guardian calls Lumi's
+signature-protected provider directly and records the returned health/probe evidence.
+
+ACCEPTANCE TEST
+1. Install this build and Guardian 1.5.
+2. Run Guardian -> Lumi certification and confirm PASS is persisted.
+3. Apply a harmless maintenance/content change and verify the transaction ends in CERTIFIED.
+4. For a controlled negative test, force a certification failure and verify Guardian records
+   CERTIFICATION_FAILED / core_recovery_required and restores the state checkpoint.
+5. Do not retire APK Factory as catastrophic backup until one newer Lumi core is installed by
+   Guardian and both positive + controlled negative recovery tests are proven on-device.

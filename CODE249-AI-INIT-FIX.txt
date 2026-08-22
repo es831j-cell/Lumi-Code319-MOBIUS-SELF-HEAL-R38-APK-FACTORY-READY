@@ -1,0 +1,26 @@
+LUMI CODE249 — AI INITIATION / STATUS FIX
+Date: 2026-08-20
+Base: Code248 AI Connection Manager source
+Version: 4.0.2-ai-init-fix-r1 / versionCode 249
+
+Observed symptom
+- User asks “how’s your AI?” and Lumi answers with the generic “connect my stronger AI booster” fallback even when the real question is connection health.
+
+Fix
+1. Treat AI-health phrases as an operational status intent.
+2. Report AiConnectionManager state instead of a generic conversational fallback.
+3. Force a fresh preflight when the user asks about AI connection health.
+4. Force a fresh preflight immediately after OpenAI or remote-booster configuration changes.
+5. Refresh stale AI state when Lumi returns to foreground.
+6. Add a manual “Recheck AI connection now” button in Integration Center.
+7. If a strong provider is configured but a turn falls back locally, say that explicitly rather than falsely claiming no booster is connected.
+
+Expected test
+- Launch Lumi with the configured provider.
+- Ask: “How’s your AI?”
+- Lumi should report CONNECTED/CHECKING/AUTH REQUIRED/OFFLINE/etc. from the connection manager and start a fresh check.
+- Open Integration Center and verify the AI Connection Manager card updates.
+- Tap Recheck AI connection now to force another preflight.
+
+Important
+This changes compiled Java runtime behavior, so it requires a new core APK build. It cannot be activated by a Code247 content-only modular ZIP. Build this source through the normal APK Factory/GitHub path and preserve the existing signing identity.

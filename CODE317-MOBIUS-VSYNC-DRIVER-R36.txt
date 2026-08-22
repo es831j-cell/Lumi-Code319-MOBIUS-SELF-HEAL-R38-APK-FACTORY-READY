@@ -1,0 +1,15 @@
+LUMI CODE 317 — MOBIUS VSYNC DRIVER R36
+
+Purpose:
+Repair the visible Möbius strip that renders correctly but remains static.
+
+Changes:
+- Replaces reliance on GLSurfaceView continuous mode with an explicit display-vsync frame driver.
+- Requests a real GPU frame on every UI animation frame while the view is attached and visible.
+- Hooks GLSurfaceView resume/pause to MainActivity lifecycle.
+- Keeps the welded Möbius geometry, seam-safe deformation, neon glass, and alien runes intact.
+- Animates the actual 3D model/shader time, not a bitmap or lighting-only overlay.
+- Adds live animation diagnostics: driver state, tick count, driver age, rendered frame count, FPS, frame age, phase, and visual state.
+
+Expected result:
+The Möbius strip should visibly rotate/deform continuously whenever Lumi is on screen. If it freezes, diagnostics now identify whether the UI frame driver or GL renderer stopped.

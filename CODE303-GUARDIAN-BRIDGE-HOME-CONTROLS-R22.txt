@@ -1,0 +1,10 @@
+Lumi Code 303 - Guardian Bridge + Home Controls R22
+
+- Lumi 4.0.56 / code 303.
+- Guardian 1.8 / code 9.
+- Adds Guardian bridge_probe endpoint with explicit signed same-phone round-trip PASS/FAIL, transaction id, completion timestamp, latency, Guardian version and pending-request state.
+- Lumi check_maintenance_bridge now records MAINTENANCE_TOOL COMPLETE and reports GUARDIAN_UPDATE_REQUIRED when Guardian is older than code 9.
+- Raises Lumi required Guardian version to code 9 so the embedded companion update is actually offered.
+- Repairs home-screen Listen / Stop listening geometry without globally inflating menu buttons. Stop listening gets slightly more width, 60dp height, 15sp single-line label and balanced spacing.
+- Applies the same stable voice-control geometry on the Talk screen.
+- Preserves Code 302 speech recovery, static Mobius, routing, memory, and maintenance safety controls.

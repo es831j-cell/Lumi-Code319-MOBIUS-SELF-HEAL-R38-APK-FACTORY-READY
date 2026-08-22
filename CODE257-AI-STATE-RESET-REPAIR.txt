@@ -1,0 +1,14 @@
+LUMI CODE257 AI STATE RESET REPAIR
+
+Purpose:
+- Clear stale ai_connection_* state left by older builds.
+- Force all AI/provider status questions through AiConnectionManager.
+- Never allow the local language model to invent online-provider status.
+- Use a new Code257 OpenAI setup prompt flag so prior Code254 prompts cannot suppress setup forever.
+- If no OpenAI credential is stored, open setup and say so plainly.
+- Preserve Guardian 1.3 / versionCode 4.
+
+Expected test after install:
+Ask: How is your AI connection?
+If no key is stored, Lumi should open OpenAI setup.
+If a key is stored, Lumi should report that it is checking or connected.

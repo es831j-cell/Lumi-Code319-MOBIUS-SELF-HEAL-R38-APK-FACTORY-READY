@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+
+import java.util.Properties
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = file('../app/keystore.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace 'com.distressedelk.lumi.guardian'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.distressedelk.lumi.guardian'
+        minSdk 28
+        targetSdk 35
+        versionCode 12
+        versionName '2.1-provider-auth-fix'
+    }
+
+    signingConfigs {
+        lumiGuardian {
+            storeFile file('../app/' + keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
+    buildTypes {
+        debug { signingConfig signingConfigs.lumiGuardian }
+        release {
+            signingConfig signingConfigs.lumiGuardian
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

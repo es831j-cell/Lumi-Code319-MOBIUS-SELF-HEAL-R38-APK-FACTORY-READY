@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "protocol": "lumi-maintenance-relay-v1",
+  "transport": "HTTPS outbound polling or persistent outbound connection",
+  "commandEnvelope": {
+    "required": ["transactionId", "issuedAt", "expiresAt", "nonce", "action", "payloadHash", "signature"],
+    "signatureRequired": true,
+    "replayProtection": true,
+    "expirationRequired": true
+  },
+  "resultEnvelope": {
+    "required": ["transactionId", "state", "deviceTimestamp", "resultHash", "deviceSignature"],
+    "deviceSigned": true
+  },
+  "relayTrust": "transport-only",
+  "relayMayAuthorizeInstall": false,
+  "relayMayPossessLumiSigningKey": false
+}

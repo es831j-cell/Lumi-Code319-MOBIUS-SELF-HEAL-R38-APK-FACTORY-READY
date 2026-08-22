@@ -1,0 +1,48 @@
+LUMI STRONG BOOTSTRAP V1 - PREINSTALL SOURCE AUDIT
+Candidate: Lumi 3.9.0-bootstrap / code247
+Guardian: 1.1-certification / code2
+Audit stage: SOURCE PACKAGE ONLY - NOT YET PHONE-CERTIFIED
+
+GREEN / IMPLEMENTED IN SOURCE
+[GREEN] Lumi applicationId remains com.distressedelk.lumi.
+[GREEN] Lumi versionCode advances from 246 to 247.
+[GREEN] Trusted Lumi signing-certificate fingerprint is pinned and unchanged from codes 240-243.
+[GREEN] Separate Guardian Android app exists as com.distressedelk.lumi.guardian.
+[GREEN] Guardian verifies Lumi package name, newer versionCode, and trusted signing certificate before install.
+[GREEN] Guardian uses Android PackageInstaller sessions and records install transaction status.
+[GREEN] Lumi exposes a signature-protected Guardian bridge, not a generally open recovery API.
+[GREEN] Guardian requests a Lumi recovery checkpoint before a core install.
+[GREEN] Recovery checkpoints have SHA-256 integrity files and exclude API credentials/transient update state.
+[GREEN] OpenAI and remote-booster API keys migrate from plaintext preferences into Android Keystore-backed encrypted storage.
+[GREEN] Portable user backup excludes API keys/tokens/passwords and secure secret entries.
+[GREEN] Core self-test now fails certification when Fast Brain is quarantined/prompt-mismatch degraded.
+[GREEN] Lumi hands verified pending core APKs to Guardian instead of directly installing them when Guardian is trusted.
+[GREEN] First-run Lumi flow contains embedded Guardian installation and Guardian signing-identity verification.
+[GREEN] Guardian requests its own Android install-source approval on first run.
+[GREEN] CI builds Guardian release first, embeds the signed Guardian APK into Lumi, then builds Lumi release.
+[GREEN] CI validates package/version identity and APK signing certificate and generates SHA256SUMS.
+[GREEN] Update import now has package/payload size limits and minimum-free-space protection.
+[GREEN] Guardian active certification calls Lumi's real Fast Brain probe instead of merely rereading stored health flags.
+[GREEN] A successful constrained Fast Brain probe is required before stale prompt-mismatch quarantine/status can be cleared.
+[GREEN] Guardian is bumped to code2 and Lumi prompts an installed trusted code1 Guardian to upgrade.
+
+YELLOW / INTENTIONAL TRANSITION ITEMS
+[YELLOW] The existing private signing keystore remains in THIS one APK Factory source bundle to preserve the installed Lumi signing lineage. It must be moved out of ordinary source/update archives after the bootstrap is proven.
+[YELLOW] Automatic forward recovery from a bad native APK requires a future update bundle to provide a signed higher-version recovery APK. Guardian plumbing is being established now; the real bad-build recovery test still must be performed on-device.
+[YELLOW] Persistent custom wake-word-only Testing Mode is not newly implemented in code247. Bootstrap/recovery reliability is prioritized first.
+[YELLOW] Lumi still allows cleartext networking for compatibility with the user's local remote-AI endpoint. Narrowing that policy remains a post-bootstrap hardening item.
+[YELLOW] Manual locally selected unsigned content ZIPs remain permitted by Lumi's existing developer workflow. Unattended/remote update signing must be enforced before autonomous remote updating is enabled.
+
+RED / INSTALL BLOCKERS AT SOURCE-PACKAGE STAGE
+[RED UNTIL CI PASSES] This environment has not compiled the Android release APKs. APK Factory/GitHub Actions must successfully compile Guardian and Lumi and pass the included signature/package checks.
+[RED UNTIL DEVICE TEST] Guardian has not yet installed a successor Lumi APK on the actual phone.
+[RED UNTIL DEVICE TEST] Deliberately bad-core detection and forward-recovery have not yet been proven on the actual phone.
+
+DO NOT CALL APK FACTORY RETIRED YET.
+Required next gate:
+1. Build this package through APK Factory/GitHub Actions.
+2. Audit the resulting APK/certification bundle before installing.
+3. Install code247 once through APK Factory.
+4. Install embedded Guardian and grant Android's Guardian install-source approval.
+5. Guardian installs a newer full Lumi APK without APK Factory.
+6. Perform deliberate bad-build + forward-recovery test.

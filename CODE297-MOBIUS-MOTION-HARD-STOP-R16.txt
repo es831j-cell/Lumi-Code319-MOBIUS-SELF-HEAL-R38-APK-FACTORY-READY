@@ -1,0 +1,25 @@
+LUMI CODE 297 — VISIBLE MÖBIUS MOTION + HARD STOP LISTENING R16
+
+Built from Code 296.
+
+Möbius motion:
+- The existing glow points continue to flow.
+- The actual Möbius artwork now visibly breathes, lifts and gently tilts.
+- This addresses the Code 296 behavior where only overlay points moved and the strip itself
+  appeared static.
+
+Stop Listening:
+- Stop Listening now sets a persistent manual-stop latch.
+- Automatic startup, foreground-service handoff, permission callbacks, recovery watchdogs
+  and normal hands-free logic may NOT re-enable the microphone while this latch is set.
+- The microphone remains off across app redraws/reopens until the user explicitly presses Listen.
+- Pressing Listen clears the latch and reinitiates conversation mode.
+- Diagnostics now report the manual-stop latch state.
+
+Retained:
+- Code 296 animated energy overlay
+- stock/company-name ticker normalization
+- post-TTS recognizer recovery
+- silent automatic STT restarts
+- TTS self-heal
+- direct time/weather routing

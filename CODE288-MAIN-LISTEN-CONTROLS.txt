@@ -1,0 +1,14 @@
+LUMI CODE 288 - MAIN LISTEN CONTROLS
+
+Purpose
+- Put explicit Listen and Stop listening buttons directly on Lumi's main screen.
+- Keep them visible without tapping the avatar to reveal the More controls.
+- Remove the ambiguous single Listen/Pause toggle from the hidden control tray.
+
+Behavior
+- Listen starts hands-free conversation mode.
+- Stop listening immediately ends continuous microphone recognition and releases audio focus.
+- The active action disables itself so the current listening state is obvious at a glance.
+
+Base
+- Built directly from Code 287 Fast Brain Cold Start + OpenAI fallback source.

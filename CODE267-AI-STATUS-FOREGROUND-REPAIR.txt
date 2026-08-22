@@ -1,0 +1,19 @@
+LUMI CODE267 — AI STATUS FOREGROUND REPAIR
+VersionCode: 267
+VersionName: 4.0.20-ai-status-foreground-r1
+
+FIXED
+- “How is your AI?”, “are you connected?”, and similar AI-status questions are conversation-only.
+- Status questions no longer open OpenAI setup, Integration Center, another activity, or any other UI.
+- Lumi remains in the foreground and answers from the real AI Connection Manager state.
+- Connection refresh may still run quietly in the background.
+- Explicit commands such as “configure OpenAI” or “open Integration Center” remain distinct from status questions.
+- Diagnostics now record: AI status question handled conversation-only; foreground preserved.
+
+EXPECTED TEST
+1. Open Talk and start conversation mode.
+2. Ask: “How is your AI?”
+3. Lumi answers in place and the app stays foregrounded.
+4. Ask: “Are you connected?”
+5. Lumi answers in place again.
+6. Explicitly open Integration Center only when requested.

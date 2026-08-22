@@ -1,0 +1,18 @@
+LUMI PHASE 1 — MAINTENANCE BRIDGE
+
+Purpose
+- Move normal core-update installation authority from Lumi/APK Factory to the separate Guardian app.
+- Guardian accepts only signature-protected calls from Lumi.
+- Lumi stages a verified core APK, exposes it through a temporary FileProvider URI, and passes the URI plus SHA-256 to Guardian.
+- Guardian copies the APK into its own private staging area, re-hashes it, verifies package name, version progression, and signing certificate, creates a recovery checkpoint through Lumi's protected bridge, then submits the Android PackageInstaller session.
+- Guardian records install state in its ledger and requests a real Lumi certification probe after a successful install.
+- Lumi maintenance status now includes Guardian transaction/certification state.
+
+Security boundary
+- No shell execution.
+- No arbitrary filesystem paths cross the bridge.
+- No untrusted package name or signing identity is accepted.
+- Bridge provider remains protected by com.distressedelk.lumi.permission.GUARDIAN.
+- Android may still require system install approval depending on platform/policy.
+
+This is Phase 1, not the complete remote-maintenance system. It establishes the trusted install/checkpoint/certification bridge required to retire APK Factory from normal Lumi updates.

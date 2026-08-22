@@ -1,0 +1,11 @@
+LUMI CODE 295 BUILD FIX R14.1
+
+Fixes APK Factory Java compilation failure:
+- Removed unsupported android.app.Notification.Builder#setSilent(boolean).
+- Foreground Lumi continuity notification remains silent through its dedicated
+  notification channel:
+    * channel sound = null
+    * vibration disabled
+    * onlyAlertOnce enabled
+
+No functional Code 295 listening-recovery behavior was removed.

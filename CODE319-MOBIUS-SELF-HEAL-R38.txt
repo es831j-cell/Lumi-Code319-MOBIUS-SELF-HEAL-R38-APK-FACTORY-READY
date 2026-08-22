@@ -1,0 +1,16 @@
+LUMI CODE 319 — MOBIUS SELF-HEAL R38
+
+PURPOSE
+Prevent the visible Möbius animation from remaining frozen after lifecycle or render-driver stalls.
+
+IMPLEMENTED
+- Separates visual PAUSED state from render-driver pause. PAUSED now remains a calm moving animation.
+- Adds an independent 500 ms animation watchdog while the Möbius view is attached.
+- If the view is visible, the GL surface is resumed, and driver ticks stop for >750 ms, the driver is restarted.
+- If driver ticks continue but rendered-frame age exceeds 750 ms, the renderer receives a render nudge.
+- Restarts the driver on attach, view visibility, window visibility, window focus, GL resume, and visual-state changes.
+- Stops the driver only for true GL pause, hidden/detached view states.
+- Diagnostics now report driver recoveries, last driver event, GL pause state, attachment, and view/window visibility.
+
+DIAGNOSTIC INTERPRETATION
+A diagnostic screen can legitimately show the home Möbius view as detached/stopped after navigation away from Home. The added attachment/visibility fields distinguish that expected state from a visible-home freeze.

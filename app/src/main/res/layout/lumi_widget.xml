@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:gravity="center" android:padding="12dp"
+    android:background="@drawable/widget_bg">
+    <TextView android:id="@+id/lumi_widget_button"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center" android:text="✦  Talk to Lumi" android:textSize="18sp"
+        android:textStyle="bold" android:textColor="#F2F6FA" />
+</LinearLayout>

@@ -1,0 +1,21 @@
+LUMI CODE 299 — SPEECH SALVAGE + TRUE RIBBON FLOW R18
+
+Based on the Code 298 diagnostic.
+
+Voice recognition:
+- Stops forcing Android's on-device/offline recognizer for normal conversation.
+- Uses the standard network-capable Google SpeechRecognizer when available.
+- Captures partial recognition hypotheses.
+- If Google detects speech but ends with ERROR_NO_MATCH / code 7, Lumi salvages a
+  recent usable partial transcript instead of throwing the sentence away.
+- Shortens end-of-speech silence windows to reduce long dead sessions.
+- Preserves the hard manual Stop Listening latch at the final recognizer gate.
+- Diagnostics report how many partial transcripts were salvaged.
+
+Möbius:
+- Removes the old lighting/dot overlay completely.
+- No whole-picture rotation.
+- Separates the displayed image into a stationary background and an isolated bright
+  Möbius ribbon layer.
+- Only the ribbon pixels are mesh-deformed, so the actual strip flows while the
+  background and HUD remain stationary.

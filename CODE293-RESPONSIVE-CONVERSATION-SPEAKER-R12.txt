@@ -1,0 +1,29 @@
+LUMI CODE 293 — RESPONSIVE CONVERSATION + SPEAKER SIGNAL R12
+
+Built from Code 292.
+
+Changes:
+1. Ordinary OpenAI conversation now uses a lean request path:
+   - maintenance tools are omitted for normal conversation
+   - recent transcript and memory packets are smaller
+   - normal replies target a shorter output budget
+   - connection/read timeouts are tightened
+   - maintenance requests keep the full Guardian-controlled tool path
+
+2. Adds a first on-device speaker-recognition signal:
+   - uses the enrolled administrator voice reference
+   - records a short comparison sample on demand
+   - performs local acoustic comparison
+   - reports probable-owner / not-confirmed plus confidence
+   - available from Administrator Identity and by saying “verify my voice”
+
+Security note:
+Speaker confidence is a personalization signal only. It does not replace the root PIN,
+device credential, or Guardian authorization for privileged changes.
+
+Retained from Code 292:
+- direct Android device clock for time
+- dedicated live weather provider routing
+- Fast Brain excluded from foreground conversation
+- Listen / Stop listening controls
+- Guardian / internal update foundation
